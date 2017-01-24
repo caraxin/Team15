@@ -10,6 +10,7 @@ namespace server {
 
 class server
 {
+ public:
   //Constructor
   server(const std::string& address, const std::string& port);
 
@@ -19,4 +20,4 @@ class server
 };
 }
 }
-#define
+#endif

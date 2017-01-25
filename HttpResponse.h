@@ -36,7 +36,7 @@ class HttpResponse : public HttpMessage
 
 };
 
-std::string HttpResponse::getHeaderText(void) {
+inline std::string HttpResponse::getHeaderText(void) {
   std::string text = getVersion() + " " + statuscode + " " +reasoning +"\r\n";
   std::map<std::string,std::string> headerFields = getHeaderFields();
   for(std::map<std::string,std::string>::iterator iter = headerFields.begin(); iter != headerFields.end(); ++iter)
@@ -47,7 +47,7 @@ std::string HttpResponse::getHeaderText(void) {
   return text;
 }
 
-char* HttpResponse::toText(void) {
+inline char* HttpResponse::toText(void) {
 
   std::string text = getHeaderText();
   
@@ -63,7 +63,7 @@ char* HttpResponse::toText(void) {
   return rt;
 }
 
-HttpResponse::HttpResponse(char * wire) : HttpMessage() {
+inline HttpResponse::HttpResponse(char * wire) : HttpMessage() {
   typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
   std::string s(wire);
   boost::char_separator<char> CRLF{"\r\n"};

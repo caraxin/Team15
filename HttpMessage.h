@@ -6,6 +6,10 @@
 #include <cstring>
 #include <boost/foreach.hpp>
 
+class HttpMessage
+{
+ public:
+
 enum HttpHeaderFields {CONTENT_LENGTH,DATE,CONTENT_TYPE,HOST,USER_AGENT,FROM,CONNECTION}; //continued
 enum HttpConnectionField {KEEP_ALIVE, CLOSE};
 std::map<HttpHeaderFields, std::string> HttpHeaderFieldsMap = {{CONTENT_LENGTH,"Content-Length"},{DATE,"Date"},{CONTENT_TYPE,"CONTENT_TYPE"},{HOST,"Host"},{USER_AGENT,"User-Agent"},{FROM,"From"},{CONNECTION,"Connection"}}; //continued
@@ -14,10 +18,7 @@ std::map<HttpHeaderFields, std::string> HttpHeaderFieldsMap = {{CONTENT_LENGTH,"
 const std::string HttpVersionToken = "HTTP/1.0";
 
 
-class HttpMessage
-{
- public:
-  HttpMessage(void) {httpVersion = HttpVersionToken; headerFields;}
+  HttpMessage(void) {httpVersion = HttpVersionToken;}
   HttpMessage(std::map<std::string,std::string> _headers) { httpVersion = HttpVersionToken; headerFields=_headers; }
       std::string getVersion(void) const { return httpVersion; }
   void setVersion(std::string _version) { httpVersion =_version; } 

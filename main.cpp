@@ -3,7 +3,7 @@
 #include <iostream>
 #include <boost/version.hpp>
 int main(int argc, char** argv) {
-  Team15::server::server s("localhost","4000");
+  Team15::server::server s("127.0.0.1","4000");
   
   s.run();
 

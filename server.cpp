@@ -8,7 +8,6 @@
 
 #include "server.h"
 
-using boost::asio::ip::tcp;
 
 std::string make_daytime_string()
 {
@@ -31,20 +30,18 @@ namespace server {
     start_accepting();
   }
   void server::start_accepting() {
+    std::cout << "Accepting connections" << std::endl;
     acceptor_.async_accept(socket_,
 			   [this](boost::system::error_code ec)
 			   {
-			     if (!acceptor_.is_open()) return;
+			     if (!acceptor_.is_open()) { std::cerr << "Failed to open" << std::endl; return; }
 			     if (!ec) {
-			       //start managing the connection
-
-			       //work in progress, currently do nothing
-			       /*			       socket_.async_read_some(boost::asio::buffer(buffer_),
-						       [this,self]
-						       (boost::system::error_code ec, std::size_t bytes_transferred) {
-							 
-
-						       });*/
+			       connection_ptr c_p = std::make_shared<connection>(std::move(socket_));
+			       connections_.insert(c_p);
+			       c_p->start();
+			     }
+			     else {
+			       std::cerr << "Found error" << std::endl;
 			     }
 			     start_accepting();
 			   });

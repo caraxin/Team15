@@ -10,14 +10,13 @@
 #include <utility>
 #include "HttpMessage.h"
 
-enum HttpRequestMethod {GET};
-std::map<HttpRequestMethod, std::string> HttpRequestMethodMap = {{GET,"GET"}};
-
-
 
 class HttpRequest : public HttpMessage
 {
  public:
+enum HttpRequestMethod {GET};
+std::map<HttpRequestMethod, std::string> HttpRequestMethodMap = {{GET,"GET"}};
+
   //constructors
  HttpRequest(std::string _url, std::string _method, std::map<std::string,std::string> _headers):HttpMessage(_headers) { url = _url; method = _method;}
  HttpRequest(std::string _url, std::string _method) : HttpMessage() { url = _url; method = _method;}
@@ -41,7 +40,7 @@ class HttpRequest : public HttpMessage
 };
 
 
-HttpRequest::HttpRequest(std::vector<unsigned char> wire) : HttpMessage() {
+inline HttpRequest::HttpRequest(std::vector<unsigned char> wire) : HttpMessage() {
   typedef boost::tokenizer<boost::char_separator<char>> tokenizer;
   std::string s(wire.begin(),wire.end());
   boost::char_separator<char> CRLF{"\r\n"};
@@ -78,7 +77,7 @@ HttpRequest::HttpRequest(std::vector<unsigned char> wire) : HttpMessage() {
 
 
 
-char* HttpRequest::toText(void) {
+inline char* HttpRequest::toText(void) {
   std::string text = method + " " + url + " " + HttpVersionToken+"\r\n";
   std::map<std::string,std::string> map = getHeaderFields();
   for(std::map<std::string,std::string>::iterator iter = map.begin(); iter != map.end(); iter++)

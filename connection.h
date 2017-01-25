@@ -7,6 +7,9 @@
 #include <memory>
 #include "HttpRequest.h"
 #include "HttpResponse.h"
+
+enum { max_length = 8192 };
+
 namespace Team15 {
 namespace server {
 class connection
@@ -23,7 +26,7 @@ class connection
   boost::asio::ip::tcp::socket socket_;
   std::unique_ptr<HttpRequest> request_p;
   std::unique_ptr<HttpResponse> response_p;
-  std::array<char,8192> buffer_;  
+  std::array<char,max_length> buffer_;  
 
 };
 }

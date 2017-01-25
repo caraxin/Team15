@@ -13,14 +13,15 @@ class HttpResponse : public HttpMessage
  public:
  HttpResponse(std::string _code, std::string _reason, char * _body,int _bodyLength) : HttpMessage(),statuscode(_code),reasoning(_reason),body(_body),bodyLength(_bodyLength),deallocFlag(0) {}
    HttpResponse(char * wire);
-   ~HttpResponse() {if (deallocFlag) free(body);}
+   ~HttpResponse() { if (deallocFlag) free(body); }
   std::string getStatusCode(void) const { return statuscode; }
   void setStatusCode(std::string _code) { statuscode=_code; }
   std::string getReasoning(void) const { return reasoning; }
   void setReasoning(std::string r) { reasoning = r; }
   char* getBody(void) const { return body; }
-  int getBodyLength(void) const {return bodyLength;}
-  void setBody(char*  b,int length) { body=b; bodyLength = length;}
+  int getBodyLength(void) const {return bodyLength; }
+  void setBody(char*  b, int length) { body=b; bodyLength = length; }
+  void setContentType(std::string c) { contentType = c; }
   
   //setting Header fields
   
@@ -29,6 +30,7 @@ class HttpResponse : public HttpMessage
  private:
   std::string statuscode;
   std::string reasoning;
+  std::string contentType;
    char * body;
    int bodyLength;
   
@@ -37,7 +39,7 @@ class HttpResponse : public HttpMessage
 };
 
 inline std::string HttpResponse::getHeaderText(void) {
-  std::string text = getVersion() + " " + statuscode + " " +reasoning +"\r\n";
+  std::string text = getVersion() + " " + statuscode + " " + reasoning + " " + contentType + "\r\n";
   std::map<std::string,std::string> headerFields = getHeaderFields();
   for(std::map<std::string,std::string>::iterator iter = headerFields.begin(); iter != headerFields.end(); ++iter)
     {

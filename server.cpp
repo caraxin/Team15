@@ -17,11 +17,37 @@ std::string make_daytime_string()
 namespace Team15 {
 namespace server {
 
-  server::server(const std::string& address, const std::string& port) {
+  server::server(const std::string& address, const std::string& port):
+    io_service_(),socket_(io_service_), acceptor_(io_service_){
+    boost::asio::ip::tcp::resolver resolver(io_service_);
+    boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve({address, port});
+    acceptor_.open(endpoint.protocol());
+    acceptor_.set_option(boost::asio::ip::tcp::acceptor::reuse_address(true));
+    acceptor_.bind(endpoint);
+    acceptor_.listen();
+    start_accepting();
   }
-  
+  void server::start_accepting() {
+    acceptor_.async_accept(socket_,
+			   [this](boost::system::error_code ec)
+			   {
+			     if (!acceptor_.is_open()) return;
+			     if (!ec) {
+			       //start managing the connection
+
+			       //work in progress, currently do nothing
+			       /*			       socket_.async_read_some(boost::asio::buffer(buffer_),
+						       [this,self]
+						       (boost::system::error_code ec, std::size_t bytes_transferred) {
+							 
+
+						       });*/
+			     }
+			     start_accepting();
+			   });
+  }
   void server::run() {
-	  try
+    /*	  try
 	  {
 	    boost::asio::io_service io_service;
 
@@ -43,7 +69,8 @@ namespace server {
 	    std::cerr << e.what() << std::endl;
 	  }
 
-	  return;
+	  return;*/
+    io_service_.run();
   }
 
 }

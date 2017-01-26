@@ -12,11 +12,13 @@ enum { max_length = 8192 };
 
 namespace Team15 {
 namespace server {
+  class server;
 class connection
+  : public std::enable_shared_from_this<connection>
 {
  public:
   
-  explicit connection(boost::asio::ip::tcp::socket socket);
+  explicit connection(boost::asio::ip::tcp::socket socket,server* server);
   void start();
   void stop();
 
@@ -27,8 +29,12 @@ class connection
   std::unique_ptr<HttpRequest> request_p;
   std::unique_ptr<HttpResponse> response_p;
   std::array<char,max_length> buffer_;  
+  server* server_;
 
 };
+
+  typedef std::shared_ptr<connection> connection_ptr;
+
 }
 }
 

@@ -36,8 +36,9 @@ namespace server {
 			   {
 			     if (!acceptor_.is_open()) { std::cerr << "Failed to open" << std::endl; return; }
 			     if (!ec) {
-			       connection_ptr c_p = std::make_shared<connection>(std::move(socket_));
+			       connection* c_p = new connection(std::move(socket_),this);
 			       connections_.insert(c_p);
+			       std::cout << "starting connection" << std::endl;
 			       c_p->start();
 			     }
 			     else {
@@ -49,6 +50,10 @@ namespace server {
   void server::run() {
     io_service_.run();
   }
-
+  void server::connection_done(connection* connection) {
+    connections_.erase(connection);
+    connection->stop();
+    free(connection);
+  }
 }
 }

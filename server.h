@@ -21,13 +21,14 @@ class server
   
   // Run the server's io loop
   void run();
+  void connection_done(connection* connection);
  private:
   void start_accepting();
   boost::asio::io_service io_service_;
   boost::asio::ip::tcp::socket socket_;
   boost::asio::ip::tcp::acceptor acceptor_;
-  typedef std::shared_ptr<connection> connection_ptr;
-  std::set<connection_ptr> connections_;
+
+  std::set<connection*> connections_;
 
 };
 }

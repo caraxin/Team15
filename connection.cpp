@@ -27,18 +27,24 @@ namespace server {
   }
   void connection::start_writing() {
     std::string str(buffer_.begin(),buffer_.end());
-    char * wire = new char[str.length()+1];
-    strcpy(wire, str.c_str());
+    std::unique_ptr<char> wire(new char[str.length()+1]);
+    strcpy(wire.get(), str.c_str());
 
-    HttpResponse* response = new HttpResponse("", "", wire, str.length()+1);
-    response->setStatusCode(OK);
-    response->setContentType("text/plain");
+    response_p.reset(new HttpResponse("", "", wire.get(), str.length()+1));
+    response_p->setStatusCode(OK);
+    response_p->setContentType("text/plain");
+    
+    std::cout << wire.get() << std::endl;
+    const std::string response_buf(response_p->toText());
+    boost::asio::async_write(socket_,boost::asio::buffer(response_buf),
+			     [this](boost::system::error_code ec, std::size_t bytes_transferred) {
+			       if (!ec) {
+				 boost::system::error_code ignored_ec;
+				 socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored_ec);
+			       }
+			     });
 
-    wire = response->toText();
-    std::cout << wire << std::endl;
 
-    boost::system::error_code ignored_ec;
-    socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored_ec);
   }
 }
 }

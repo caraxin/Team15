@@ -54,7 +54,7 @@ inline char* HttpResponse::toText(void) {
   std::string text = getHeaderText();
   
   char * rt = (char*) malloc(sizeof(char) * (text.length() + bodyLength+1));
-  
+  deallocFlag=1;
 
   strcpy(rt,text.data());
   

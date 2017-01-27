@@ -16,7 +16,7 @@ class server
   //Constructor
   server(const server&) = delete;
   server& operator=(const server&) = delete;
-
+  ~server();
   explicit server(const std::string& address, const std::string& port);
   
   // Run the server's io loop

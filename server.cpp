@@ -30,7 +30,7 @@ namespace server {
     start_accepting();
   }
   void server::start_accepting() {
-    std::cout << "Accepting connections" << std::endl;
+    std::cout << "Accepting connections." << std::endl;
     acceptor_.async_accept(socket_,
 			   [this](boost::system::error_code ec)
 			   {
@@ -38,7 +38,7 @@ namespace server {
 			     if (!ec) {
 			       connection* c_p = new connection(std::move(socket_),this);
 			       connections_.insert(c_p);
-			       std::cout << "starting connection" << std::endl;
+			       std::cout << "Socket opened, Starting connection." << std::endl;
 			       c_p->start();
 			     }
 			     else {
@@ -54,6 +54,12 @@ namespace server {
     connections_.erase(connection);
     connection->stop();
     free(connection);
+  }
+  server::~server() {
+    for (auto connection : connections_) {
+      connection->stop();
+      free(connection);
+    }
   }
 }
 }

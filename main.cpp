@@ -23,13 +23,12 @@ int main(int argc, char** argv) {
   	valuePairs.insert({token1, token2});
   }
 
-  printf("%s\n", valuePairs["listen"].c_str());
-  printf("%s\n", valuePairs["server_name"].c_str());
+  //printf("%s\n", valuePairs["listen"].c_str());
+  //printf("%s\n", valuePairs["server_name"].c_str());
 
   Team15::server::server s(valuePairs["server_name"],valuePairs["listen"]);
   
   s.run();
-
-  std::cout << "BOOST VERSION: " << BOOST_VERSION/100000 << "." << BOOST_VERSION/100 % 1000<< "." << BOOST_VERSION% 100 << std::endl;
+  
   return 0;
 }

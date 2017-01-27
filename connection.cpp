@@ -38,7 +38,7 @@ namespace server {
     response_p->setStatusCode(OK);
     response_p->setContentType("text/plain");
     
-    std::cout << wire.get() << std::endl;
+    //std::cout << wire.get() << std::endl;
     const std::string response_buf(response_p->toText());
     boost::asio::async_write(socket_,boost::asio::buffer(response_buf),
 			     [this](boost::system::error_code ec, std::size_t bytes_transferred) {

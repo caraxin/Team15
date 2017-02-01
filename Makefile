@@ -20,4 +20,3 @@ test : $(SOURCES) $(HEADERS) $(TESTFILES)
 	$(CC) -isystem $(GTEST_DIR)/include $(TESTFILES) $(CLASS_SOURCES) ${GTEST_DIR}/src/gtest_main.cc libgtest.a $(CFLAGS) -fprofile-arcs -ftest-coverage -o server_test
 	./server_test
 	cd nginx-configparser && chmod a+x build_tests.sh && ./build_tests.sh && ./config_parser_test
-	rm -f webserver server_test *~ *.o *.a *.gcda *.gcno *.gcov

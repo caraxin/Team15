@@ -3,7 +3,7 @@
 #include "HttpMessage.h"
 #include <string>
 #include <boost/tokenizer.hpp>
-
+#include <memory>
 const std::string OK = "200";
 const std::string BAD_REQUEST = "400";
 const std::string NOT_FOUND = "404";
@@ -11,16 +11,15 @@ const std::string NOT_FOUND = "404";
 class HttpResponse : public HttpMessage
 {
  public:
- HttpResponse(std::string _code, std::string _reason, char * _body,int _bodyLength) : HttpMessage(),statuscode(_code),reasoning(_reason),body(_body),bodyLength(_bodyLength),deallocFlag(0) {}
+ HttpResponse(std::string _code, std::string _reason, std::unique_ptr<char> _body,int _bodyLength) : HttpMessage(),statuscode(_code),reasoning(_reason),body(std::move(_body)),bodyLength(_bodyLength),deallocFlag(0) {}
    HttpResponse(char * wire);
-   ~HttpResponse() { if (deallocFlag) free(body); }
   std::string getStatusCode(void) const { return statuscode; }
   void setStatusCode(std::string _code) { statuscode=_code; }
   std::string getReasoning(void) const { return reasoning; }
   void setReasoning(std::string r) { reasoning = r; }
-  char* getBody(void) const { return body; }
+  char* getBody(void) const { return body.get(); }
   int getBodyLength(void) const {return bodyLength; }
-  void setBody(char*  b, int length) { body=b; bodyLength = length; }
+  void setBody(std::unique_ptr<char> b, int length) { body.reset(b.release()); bodyLength = length; }
   void setContentType(std::string c) { contentType = c; }
   
   //setting Header fields
@@ -31,10 +30,11 @@ class HttpResponse : public HttpMessage
   std::string statuscode;
   std::string reasoning;
   std::string contentType;
-   char * body;
-   int bodyLength;
+  std::unique_ptr<char> toTextBody;
+  std::unique_ptr<char> body;
+  int bodyLength;
   
-   int deallocFlag;
+  int deallocFlag;
 
 };
 
@@ -53,16 +53,14 @@ inline char* HttpResponse::toText(void) {
 
   std::string text = getHeaderText();
   
-  char * rt = (char*) malloc(sizeof(char) * (text.length() + bodyLength+1));
-  deallocFlag=1;
-
-  strcpy(rt,text.data());
+  toTextBody.reset(new char[(text.length() + bodyLength+1)]());
+  strcpy(toTextBody.get(),text.data());
   
-  if (body > 0) {
-    memcpy(rt+text.length(),body,bodyLength);
+  if (body) {
+    memcpy(toTextBody.get()+text.length(),body.get(),bodyLength);
   }
-  rt[text.length()+bodyLength]='\0';
-  return rt;
+  toTextBody.get()[text.length()+bodyLength]='\0';
+  return toTextBody.get();
 }
 
 inline HttpResponse::HttpResponse(char * wire) : HttpMessage() {
@@ -70,7 +68,6 @@ inline HttpResponse::HttpResponse(char * wire) : HttpMessage() {
   std::string s(wire);
   boost::char_separator<char> CRLF{"\r\n"};
   boost::char_separator<char> space{" "};
-  body = 0;
   deallocFlag = 1;
   reasoning="";
   statuscode="";
@@ -116,9 +113,9 @@ inline HttpResponse::HttpResponse(char * wire) : HttpMessage() {
   if (map.find(HttpHeaderFieldsMap[CONTENT_LENGTH]) != map.end() ) {
     std::string str_ = map[HttpHeaderFieldsMap[CONTENT_LENGTH]];
     int contentLength = atoi(str_.c_str());
-    char * b = (char*) malloc(sizeof(char) *  (contentLength));
-    memcpy(b,wire+str1.length()+DCRLF.length(),contentLength);
-    body = b;
+    std::unique_ptr<char> b( new char[contentLength]());
+    memcpy(b.get(),wire+str1.length()+DCRLF.length(),contentLength);
+    body.reset(b.release());
     bodyLength = contentLength;
     deallocFlag = 1;
   }

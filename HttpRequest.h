@@ -9,7 +9,7 @@
 #include <map>
 #include <utility>
 #include "HttpMessage.h"
-
+#include <memory>
 
 class HttpRequest : public HttpMessage
 {
@@ -36,7 +36,7 @@ std::map<HttpRequestMethod, std::string> HttpRequestMethodMap = {{GET,"GET"}};
  private:
   std::string url;
   std::string method;
-  
+  std::unique_ptr<char> textBody;
 };
 
 
@@ -78,14 +78,17 @@ inline HttpRequest::HttpRequest(std::vector<unsigned char> wire) : HttpMessage()
 
 
 inline char* HttpRequest::toText(void) {
-  std::string text = method + " " + url + " " + HttpVersionToken+"\r\n";
+  std::string text = method + " " + url + " " + getHttpVersion()+"\r\n";
   std::map<std::string,std::string> map = getHeaderFields();
   for(std::map<std::string,std::string>::iterator iter = map.begin(); iter != map.end(); iter++)
     {
       text+= iter->first + ": " + iter->second + "\r\n";
     }
   text+="\r\n";
-  return (char*)text.data();
+  textBody.reset(new char[text.length()]());
+  
+  strcpy(textBody.get(),text.c_str());
+  return textBody.get();
 }
 
 

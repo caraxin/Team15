@@ -24,7 +24,10 @@ class connection
 
  private:
   void start_reading();
+  void read_handler(const boost::system::error_code& ec,std::size_t bytes_transferred);
   void start_writing();
+  void generate_response();
+  void write_handler(const boost::system::error_code& ec,std::size_t bytes_transferred);
   boost::asio::ip::tcp::socket socket_;
   std::unique_ptr<HttpRequest> request_p;
   std::unique_ptr<HttpResponse> response_p;

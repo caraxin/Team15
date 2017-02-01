@@ -33,6 +33,6 @@ fi
 echo "Cleaning up and shutting down"
 pkill webserver
 make clean
-rm test_response
+test_response
 
 exit "$EXIT_STATUS"

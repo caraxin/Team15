@@ -39,7 +39,7 @@ class HttpResponse : public HttpMessage
 };
 
 inline std::string HttpResponse::getHeaderText(void) {
-  std::string text = getVersion() + " " + statuscode + " " + contentType + " " + reasoning + "\r\n";
+  std::string text = getVersion() + " " + statuscode + " " + reasoning + " " + contentType + "\r\n";
   std::map<std::string,std::string> headerFields = getHeaderFields();
   for(std::map<std::string,std::string>::iterator iter = headerFields.begin(); iter != headerFields.end(); ++iter)
     {

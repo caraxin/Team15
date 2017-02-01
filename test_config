@@ -1,2 +1,4 @@
-listen 4000;
-server_name 127.0.0.1;
+server {
+	listen 65536;
+	server_name 127.0.0.1;
+}

@@ -33,6 +33,7 @@ const std::string HttpVersionToken = "HTTP/1.0";
   virtual char* toText(void)=0;
  protected:
   std::map<std::string,std::string> getHeaderFields(void) {return headerFields;}
+  std::string getHttpVersion(void) {return httpVersion;}
  private:
     std::string httpVersion;
     std::map<std::string,std::string> headerFields;

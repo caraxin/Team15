@@ -7,6 +7,9 @@
 #include <memory>
 #include "connection.h"
 #include <set>
+
+
+
 namespace Team15 {
 namespace server {
 
@@ -22,12 +25,12 @@ class server
   // Run the server's io loop
   void run();
   void connection_done(connection* connection);
- private:
+  boost::asio::io_service& getService();
+private:
   void start_accepting();
   boost::asio::io_service io_service_;
   boost::asio::ip::tcp::socket socket_;
   boost::asio::ip::tcp::acceptor acceptor_;
-
   std::set<connection*> connections_;
 
 };

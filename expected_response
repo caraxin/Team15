@@ -1,4 +1,5 @@
-HTTP/1.0 200  text/plain
+HTTP/1.0 200 OK
+Content-Type: text/plain
 
 GET / HTTP/1.1
 User-Agent: curl/7.35.0

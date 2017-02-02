@@ -61,5 +61,8 @@ namespace server {
       free(connection);
     }
   }
+  boost::asio::io_service& server::getService() {
+    return io_service_;
+  }
 }
 }

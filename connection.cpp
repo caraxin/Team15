@@ -38,7 +38,7 @@ namespace server {
     response_p.reset(new HttpResponse(OK, "OK", std::move(wire), str.length()+1));
     //wire is now invalid, do not use!!
     response_p->setHeaderField(HttpMessage::HttpHeaderFields::CONTENT_TYPE,("text/plain"));
-    
+    std::cout << response_p->toText() << std::endl;
   }
   void connection::start_writing() {
     generate_response();
@@ -55,6 +55,19 @@ namespace server {
       socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored_ec);
     }
     server_->connection_done(this);
+  }
+  HttpRequest* connection::getRequest() {
+    return request_p.get();
+  }
+  HttpResponse* connection::getResponse() {
+    return response_p.get();
+  }
+  void connection::setBuffer(std::string& str) {
+    std::array<char,max_length> newBuff;
+    for (unsigned int i = 0; i < str.length(); ++i) {
+      newBuff[i] = str[i];
+    }
+    buffer_ = newBuff;
   }
 }
 }

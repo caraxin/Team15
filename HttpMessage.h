@@ -10,9 +10,9 @@ class HttpMessage
 {
  public:
 
-enum HttpHeaderFields {CONTENT_LENGTH,DATE,CONTENT_TYPE,HOST,USER_AGENT,FROM,CONNECTION}; //continued
+  enum HttpHeaderFields {CONTENT_LENGTH,DATE,CONTENT_TYPE,HOST,USER_AGENT,FROM,CONNECTION,ACCEPT_ENCODING,ACCEPT_LANGUAGE,ACCEPT}; //continued
 enum HttpConnectionField {KEEP_ALIVE, CLOSE};
-std::map<HttpHeaderFields, std::string> HttpHeaderFieldsMap = {{CONTENT_LENGTH,"Content-Length"},{DATE,"Date"},{CONTENT_TYPE,"CONTENT_TYPE"},{HOST,"Host"},{USER_AGENT,"User-Agent"},{FROM,"From"},{CONNECTION,"Connection"}}; //continued
+ std::map<HttpHeaderFields, std::string> HttpHeaderFieldsMap = {{CONTENT_LENGTH,"Content-Length"},{DATE,"Date"},{CONTENT_TYPE,"Content-Type"},{HOST,"Host"},{USER_AGENT,"User-Agent"},{FROM,"From"},{CONNECTION,"Connection"},{ACCEPT_ENCODING,"Accept-Encoding"},{ACCEPT_LANGUAGE,"Accept-Language"},{ACCEPT,"Accept"}}; //continued
 
 
 const std::string HttpVersionToken = "HTTP/1.0";
@@ -30,9 +30,10 @@ const std::string HttpVersionToken = "HTTP/1.0";
     void setConnection(HttpConnectionField conn) { setHeaderField(CONNECTION,(conn==KEEP_ALIVE?std::string("keep-alive"):std::string("close"))); }
 
 
-  virtual char* toText(void)=0;
+
+    virtual char* toText(void)=0;
+    std::map<std::string,std::string> getHeaderFields(void) {return headerFields;}
  protected:
-  std::map<std::string,std::string> getHeaderFields(void) {return headerFields;}
   std::string getHttpVersion(void) {return httpVersion;}
  private:
     std::string httpVersion;

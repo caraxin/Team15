@@ -35,10 +35,9 @@ namespace server {
     std::unique_ptr<char> wire(new char[str.length()+1]);
     strcpy(wire.get(), str.c_str());
 
-    response_p.reset(new HttpResponse("", "", std::move(wire), str.length()+1));
+    response_p.reset(new HttpResponse(OK, "OK", std::move(wire), str.length()+1));
     //wire is now invalid, do not use!!
-    response_p->setStatusCode(OK);
-    response_p->setContentType("text/plain");
+    response_p->setHeaderField(HttpMessage::HttpHeaderFields::CONTENT_TYPE,("text/plain"));
     
   }
   void connection::start_writing() {

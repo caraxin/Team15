@@ -39,6 +39,23 @@ TEST(HttpRequest, TestHttpMessageMethods) {
 
 }
 
+Test(HttpRequest, testHttpRequestMethods) {
+  //test setUrl getUrl
+  //test getMethod setMethod
+}
+
+Test(HttpRequest, parseFromWire) {
+  //wire
+}
+Test(HttpResponse,testHttpResponseMethods) {
+  //test setStatusCode, getStatusCode
+  //test getReasoning, setReasoning
+  //test getBdoy, setBody, getBodyLength
+  //test setContentType
+}
+Test(HttpResponse, parseFromWire) {
+}
+
 
 
 

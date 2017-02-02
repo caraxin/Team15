@@ -38,7 +38,6 @@ namespace server {
     response_p.reset(new HttpResponse(OK, "OK", std::move(wire), str.length()+1));
     //wire is now invalid, do not use!!
     response_p->setHeaderField(HttpMessage::HttpHeaderFields::CONTENT_TYPE,("text/plain"));
-    std::cout << response_p->toText() << std::endl;
   }
   void connection::start_writing() {
     generate_response();

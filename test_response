@@ -1,0 +1,7 @@
+HTTP/1.0 200  text/plain
+
+GET / HTTP/1.1
+User-Agent: curl/7.35.0
+Host: localhost:4000
+Accept: */*
+

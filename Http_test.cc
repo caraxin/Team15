@@ -9,7 +9,6 @@ TEST(HttpResponse, BasicBody) {
   strcpy(freeablebody.get(),blankbody);
   HttpResponse response(OK,OK,std::move(freeablebody),9);
 
-  
   EXPECT_STREQ(response.toText(),"HTTP/1.0 200 200 \r\n\r\nbasicbody") << response.toText();
 }
 

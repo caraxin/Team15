@@ -42,7 +42,7 @@ int main(int argc, char** argv) {
 
   Team15::server::server s(valuePairs["server_name"],valuePairs["listen"]);
   
-  //s.run();
+  s.run();
   
   return 0;
 }

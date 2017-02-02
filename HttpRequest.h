@@ -46,8 +46,6 @@ inline HttpRequest::HttpRequest(std::vector<unsigned char> wire) : HttpMessage()
   boost::char_separator<char> CRLF{"\r\n"};
   boost::char_separator<char> space{" "};
   tokenizer allLines{s,CRLF};
-  url = "";
-  method = "";
   for (tokenizer::iterator it = allLines.begin(); it != allLines.end(); ++it) {
     if (it == allLines.begin()) {
           tokenizer tokens{*it,space};
@@ -55,6 +53,8 @@ inline HttpRequest::HttpRequest(std::vector<unsigned char> wire) : HttpMessage()
 	  method = *it1;
 	  std::advance(it1,1);
 	  url = *it1;
+	  std::advance(it1,1);
+	  setVersion(*it1);
     }
     else {
       std::string::size_type pos = (*it).find(" ");

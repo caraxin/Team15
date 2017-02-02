@@ -22,17 +22,17 @@ EXIT_STATUS=$?
 # Error handling
 if [ "$EXIT_STATUS" -eq 0 ]
 then
-	echo "SUCCESS: Integration test passed"
+    echo "SUCCESS: Integration test passed"
 else
-	echo "FAILED: Integration test failed"
-	echo "diff: "
-	echo $DIFF
+    echo "FAILED: Integration test failed"
+    echo "diff: "
+    echo $DIFF
 fi
 
 # Shutdown the webserver and cleanup
 echo "Cleaning up and shutting down"
 pkill webserver
 make clean
-test_response
+rm -f test_response
 
 exit "$EXIT_STATUS"

@@ -30,16 +30,10 @@ int main(int argc, char** argv) {
 
   unordered_map<string, string> valuePairs;
   parseValuePairs(valuePairs, config);
-  /*
-  int port = atoi(valuePairs["listen"].c_str());
-  if (!(port > 0 && port < 65536)) {
-    printf("Invalid port input.\n");
-    return -1;
-  }
-  */
+
   // printf("%s\n", valuePairs["listen"].c_str());
   // printf("%s\n", valuePairs["server_name"].c_str());
-  
+
   Team15::server::server s(valuePairs["server_name"],valuePairs["listen"]);   
   s.run();
   

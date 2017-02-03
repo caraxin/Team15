@@ -37,14 +37,14 @@ def print_coverage_table(coverage):
 	covered_count = 0
 
 	for x in coverage:
-		if x[-4:] == ".h'\n":
+		if 'googletest' in x or 'config_parser' in x:
 			continue
-		else:
-			print "File:", x
-			print "\tCoverage Percentage", coverage[x][0], "; Lines", coverage[x][1]
 
-			line_count += int(coverage[x][1])
-			covered_count += float(coverage[x][0]) * float(coverage[x][1])
+		print "File:", x
+		print "\tCoverage Percentage", coverage[x][0], "; Lines", coverage[x][1]
+
+		line_count += int(coverage[x][1])
+		covered_count += float(coverage[x][0]) * float(coverage[x][1])
 
 	print "Overall Coverage:", float(covered_count) / float(line_count)
 	print "Total Lines:", line_count

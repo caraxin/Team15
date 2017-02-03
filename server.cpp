@@ -21,6 +21,10 @@ namespace server {
 
   server::server(const std::string& address, const std::string& port):
     io_service_(),socket_(io_service_), acceptor_(io_service_){
+    if (!this->is_valid(address, port)) {
+      fprintf(stderr, "Error: Invalid port input");
+      exit(1);
+    }
     boost::asio::ip::tcp::resolver resolver(io_service_);
     boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve({address, port});
     acceptor_.open(endpoint.protocol());
@@ -29,6 +33,20 @@ namespace server {
     acceptor_.listen();
     start_accepting();
   }
+
+  bool server::is_valid(const std::string& address, const std::string& port) {
+    int port_num = atoi(port.c_str());
+    if (port == "") {
+      printf("Empty port input.\n");
+      return false;
+    }
+    if (!(port_num > 1023 && port_num < 65536)) {
+      printf("Invalid port input.\n");
+      return false;
+    }  
+    return true;
+  }
+
   void server::start_accepting() {
     std::cout << "Accepting connections." << std::endl;
     acceptor_.async_accept(socket_,

@@ -21,6 +21,9 @@ class server
   server& operator=(const server&) = delete;
   ~server();
   explicit server(const std::string& address, const std::string& port);
+
+  // Check if server is valid
+  bool is_valid(const std::string& address, const std::string& port);
   
   // Run the server's io loop
   void run();

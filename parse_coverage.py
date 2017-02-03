@@ -28,8 +28,30 @@ def parse_coverage():
 				if float(percent[0]) > float(coverage[current_result][0]):
 					coverage[current_result] = percent
 
-	for result in coverage:
-		print result, coverage[result]
+	print_coverage_table(coverage)
+
+
+def print_coverage_table(coverage):
+
+	line_count = 0
+	covered_count = 0
+
+	for x in coverage:
+		if x[-4:] == ".h'\n":
+			continue
+		else:
+			print "File:", x
+			print "\tCoverage Percentage", coverage[x][0], "; Lines", coverage[x][1]
+
+			line_count += int(coverage[x][1])
+			covered_count += float(coverage[x][0]) * float(coverage[x][1])
+
+	print "Overall Coverage:", float(covered_count) / float(line_count)
+	print "Total Lines:", line_count
+
+
+
+
 
 
 parse_coverage()

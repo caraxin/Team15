@@ -19,8 +19,8 @@ std::string make_daytime_string()
 namespace Team15 {
 namespace server {
 
-  server::server(const std::string& address, const std::string& port):
-    io_service_(),socket_(io_service_), acceptor_(io_service_){
+  server::server(const std::string& address, const std::string& port,const std::string& root):
+    io_service_(),socket_(io_service_), acceptor_(io_service_),root_(root){
     if (!this->is_valid(address, port)) {
       fprintf(stderr, "Error: Invalid port input");
       exit(1);
@@ -81,6 +81,9 @@ namespace server {
   }
   boost::asio::io_service& server::getService() {
     return io_service_;
+  }
+  std::string server::getRoot() {
+    return root_;
   }
 }
 }

@@ -7,7 +7,7 @@
 #include <memory>
 #include "HttpRequest.h"
 #include "HttpResponse.h"
-
+#include "requestmgr.h"
 enum { max_length = 8192 };
 
 namespace Team15 {
@@ -21,19 +21,16 @@ class connection
   explicit connection(boost::asio::ip::tcp::socket socket,server* server);
   void start();
   void stop();
-  void generate_response();
+  void parse_request(std::size_t request_length);
   //for testing purposes
-  HttpResponse* getResponse();
-  HttpRequest* getRequest();
   void setBuffer(std::string& str);
  private:
   void start_reading();
   void read_handler(const boost::system::error_code& ec,std::size_t bytes_transferred);
   void start_writing();
   void write_handler(const boost::system::error_code& ec,std::size_t bytes_transferred);
+  requestmgr requestmgr_;
   boost::asio::ip::tcp::socket socket_;
-  std::unique_ptr<HttpRequest> request_p;
-  std::unique_ptr<HttpResponse> response_p;
   std::array<char,max_length> buffer_;  
   server* server_;
 

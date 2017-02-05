@@ -34,7 +34,7 @@ int main(int argc, char** argv) {
   // printf("%s\n", valuePairs["listen"].c_str());
   // printf("%s\n", valuePairs["server_name"].c_str());
 
-  Team15::server::server s(valuePairs["server_name"],valuePairs["listen"]);   
+  Team15::server::server s(valuePairs["server_name"],valuePairs["listen"],valuePairs["root"]);   
   s.run();
   
   return 0;

@@ -28,15 +28,22 @@ class connection
   void setBuffer(std::string& str);
  private:
   void start_reading();
-  void read_handler(const boost::system::error_code& ec,std::size_t bytes_transferred);
+  bool read_handler(const boost::system::error_code& ec,std::size_t bytes_transferred);
   void start_writing();
-  void write_handler(const boost::system::error_code& ec,std::size_t bytes_transferred);
+  bool write_handler(const boost::system::error_code& ec,std::size_t bytes_transferred);
   boost::asio::ip::tcp::socket socket_;
   std::unique_ptr<HttpRequest> request_p;
   std::unique_ptr<HttpResponse> response_p;
   std::array<char,max_length> buffer_;  
   server* server_;
 
+  // allow tests to access private members
+  #ifdef TEST_CONNECTION
+  FRIEND_TEST(connection, ReadHandlerSuccess);
+  FRIEND_TEST(connection, ReadHandlerFailure);
+  FRIEND_TEST(connection, WriteHandlerSuccess);
+  FRIEND_TEST(connection, WriteHandlerFailure);
+  #endif
 };
 
   typedef std::shared_ptr<connection> connection_ptr;

@@ -21,12 +21,14 @@ namespace server {
 					this,boost::asio::placeholders::error,
 					boost::asio::placeholders::bytes_transferred));
   }
-  void connection::read_handler(const boost::system::error_code& ec,std::size_t bytes_transferred) {
+  bool connection::read_handler(const boost::system::error_code& ec,std::size_t bytes_transferred) {
     if (!ec) {
       start_writing();
+      return true;
     }
     else {
       server_->connection_done(this);
+      return false;
     }
   }
   void connection::generate_response() {
@@ -48,12 +50,15 @@ namespace server {
 					boost::asio::placeholders::bytes_transferred));
 
   }
-  void connection::write_handler(const boost::system::error_code& ec,std::size_t bytes_transferred) {
+  bool connection::write_handler(const boost::system::error_code& ec,std::size_t bytes_transferred) {
+    bool error_code = false;
     if (!ec) {
+      error_code = true;
       boost::system::error_code ignored_ec;
       socket_.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ignored_ec);
     }
     server_->connection_done(this);
+    return error_code;
   }
   HttpRequest* connection::getRequest() {
     return request_p.get();

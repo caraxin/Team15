@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# idea for test taken from
+# https://github.com/UCLA-CS130/TODO-Team-Name/blob/master/integration_test.sh
+
 # Build the binary
 make clean
 make

@@ -8,6 +8,8 @@
 
 #include "server.h"
 
+const int low_invalid_port = 1023;
+const int high_invalid_port = 65536;
 
 std::string make_daytime_string()
 {
@@ -19,8 +21,8 @@ std::string make_daytime_string()
 namespace Team15 {
 namespace server {
 
-  server::server(const std::string& address, const std::string& port):
-    io_service_(),socket_(io_service_), acceptor_(io_service_){
+  server::server(const std::string& address, const std::string& port, std::vector<requestconfig>& handlerRoots):
+    io_service_(),socket_(io_service_), acceptor_(io_service_),requestConfigVector_(handlerRoots){
     if (!this->is_valid(address, port)) {
       fprintf(stderr, "Error: Invalid port input");
       exit(1);
@@ -40,7 +42,7 @@ namespace server {
       printf("Empty port input.\n");
       return false;
     }
-    if (!(port_num > 1023 && port_num < 65536)) {
+    if (!(port_num > low_invalid_port && port_num < high_invalid_port)) {
       printf("Invalid port input.\n");
       return false;
     }  
@@ -79,8 +81,11 @@ namespace server {
       free(connection);
     }
   }
-  boost::asio::io_service& server::getService() {
+  boost::asio::io_service& server::getService()  {
     return io_service_;
+  }
+  const std::vector<requestconfig>& server::getRequestConfigVector() const {
+    return requestConfigVector_;
   }
 }
 }

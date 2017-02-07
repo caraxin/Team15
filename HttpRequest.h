@@ -85,7 +85,7 @@ inline char* HttpRequest::toText(void) {
       text+= iter->first + ": " + iter->second + "\r\n";
     }
   text+="\r\n";
-  textBody.reset(new char[text.length()]());
+  textBody.reset(new char[text.length()+1]());
   
   strcpy(textBody.get(),text.c_str());
   return textBody.get();

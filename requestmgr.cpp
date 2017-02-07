@@ -21,10 +21,6 @@ namespace server{
 
   void requestmgr::handleRequest(std::vector<unsigned char> wire) {
     request_p.reset(new HttpRequest(wire));
-    for (unsigned int i = 0; i < wire.size(); ++i) {
-      std::cout << wire[i];
-    }
-    std::cout << std::endl;
     if (request_p->getMethod() == Method_GET) {
       boost::filesystem::path url(request_p->getUrl());
       if (std::distance(url.begin(),url.end()) > 1) {
@@ -44,8 +40,10 @@ namespace server{
 	  ++iterator;
 	  ++iterator;
 	  boost::filesystem::path path;
-	  while (iterator != url.end())
+	  while (iterator != url.end()) {
 	    path /= *iterator;
+	    ++iterator;
+	  }
 	  doServeFile(boost::filesystem::path(rootURL) / path);
 	}
 	else {
@@ -60,9 +58,6 @@ namespace server{
     else {
       doServeError(BADMETHOD_CODE,BADMETHOD_REASON);
     }
-    //init request
-    //multiplex on URL
-    std::cout << response_p->toText() << std::endl;
   }
   std::unique_ptr<HttpResponse> requestmgr::generateResponse() {
     return std::move(response_p);
@@ -77,6 +72,8 @@ namespace server{
     
   }
   void requestmgr::doServeFile(boost::filesystem::path filePath) {
+    //replace this with creating a response with a file
+    doServeError(NOTFOUND_CODE,NOTFOUND_REASON);
     
   }
   void requestmgr::doServeError(const std::string& errorCode, const std::string& reason) {

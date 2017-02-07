@@ -14,14 +14,13 @@ namespace server{
   static const std::string BADMETHOD_REASON = "Method Not Allowed";
   
   //Root URLS
-  static const std::string ECHO_BASE_URL = "echo";
-  static const std::string FILE_BASE_URL = "static";
+  static const std::string ECHO_HANDLER = "EchoHandler";
+  static const std::string FILE_HANDLER = "StaticFileHandler";
 
-  requestmgr::requestmgr(std::string fileRoot):request_p(),response_p(),base_file_url_(fileRoot) {}
+  requestmgr::requestmgr(const std::vector<requestconfig>& r):request_p(),response_p(),requestConfigVector_(r) {}
 
   void requestmgr::handleRequest(std::vector<unsigned char> wire) {
     request_p.reset(new HttpRequest(wire));
-    std::cout << request_p->getUrl() << " " << request_p->getMethod() << " " << std::endl;
     for (unsigned int i = 0; i < wire.size(); ++i) {
       std::cout << wire[i];
     }
@@ -29,17 +28,25 @@ namespace server{
     if (request_p->getMethod() == Method_GET) {
       boost::filesystem::path url(request_p->getUrl());
       if (std::distance(url.begin(),url.end()) > 1) {
-	boost::filesystem::path root = *(++url.begin());
-	if (root.string().compare(ECHO_BASE_URL)==0) {
+	boost::filesystem::path root = *(url.begin()) / *(++url.begin());
+	std::string requestHandler;
+	std::string rootURL;
+	for (const requestconfig& rc : requestConfigVector_) {
+	  if (rc.getPath().compare(root.string()) == 0) {
+	    requestHandler = rc.getRequestHandler();
+	    rootURL = rc.getRootURL();
+	  }
+	}
+	if (requestHandler.compare(ECHO_HANDLER)==0) {
 	  doServeEcho(request_p->toText());
-	} else if (root.string().compare(FILE_BASE_URL)==0) {
+	} else if (requestHandler.compare(FILE_HANDLER)==0) {
 	  boost::filesystem::path::iterator iterator = url.begin();
 	  ++iterator;
 	  ++iterator;
 	  boost::filesystem::path path;
 	  while (iterator != url.end())
 	    path /= *iterator;
-	  doServeFile(base_file_url_ / path);
+	  doServeFile(boost::filesystem::path(rootURL) / path);
 	}
 	else {
 	  doServeError(NOTFOUND_CODE,NOTFOUND_REASON);

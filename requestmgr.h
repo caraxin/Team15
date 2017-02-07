@@ -6,6 +6,7 @@
 #include <string>
 #include "HttpRequest.h"
 #include "HttpResponse.h"
+#include "requestconfig.h"
 #include <boost/filesystem/path.hpp>
 namespace Team15 {
 namespace server {
@@ -13,7 +14,7 @@ namespace server {
 
 class requestmgr {
  public:
-  requestmgr(std::string fileRoot);
+  requestmgr(const std::vector<requestconfig>& requestConfigVector);
   void handleRequest(std::vector<unsigned char> wire);
   std::unique_ptr<HttpResponse> generateResponse();
  private:
@@ -22,7 +23,7 @@ class requestmgr {
   void doServeError(const std::string& errorCode,const  std::string& reason);
   std::unique_ptr<HttpRequest> request_p;
   std::unique_ptr<HttpResponse> response_p;
-  boost::filesystem::path base_file_url_;
+  const std::vector<requestconfig>& requestConfigVector_;
 };
 }
 }

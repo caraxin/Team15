@@ -5,7 +5,7 @@
 #include <boost/bind.hpp>
 namespace Team15 {
 namespace server {
-  connection::connection(boost::asio::ip::tcp::socket socket,server* server):requestmgr_(server->getRoot()),socket_(std::move(socket)),buffer_(),server_(server) {
+  connection::connection(boost::asio::ip::tcp::socket socket,server* server):requestmgr_(server->getRequestConfigVector()),socket_(std::move(socket)),buffer_(),server_(server) {
   }
   void connection::start() {
     start_reading();

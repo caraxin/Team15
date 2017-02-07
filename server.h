@@ -20,7 +20,7 @@ class server
   server(const server&) = delete;
   server& operator=(const server&) = delete;
   ~server();
-  explicit server(const std::string& address, const std::string& port,std::vector<requestconfig>& handlerRoots);
+  explicit server(const std::string& address, const std::string& port, std::vector<requestconfig>& handlerRoots);
 
   // Check if server is valid
   bool is_valid(const std::string& address, const std::string& port);

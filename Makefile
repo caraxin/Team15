@@ -1,8 +1,8 @@
 CC=g++
 GTEST_DIR=nginx-configparser/googletest/googletest
 CFLAGS=-g -std=c++11 -lboost_system -lboost_filesystem -Wall -Werror -lpthread
-HEADERS=HttpResponse.h HttpRequest.h HttpMessage.h server.h connection.h requestmgr.h nginx-configparser/config_parser.h requestconfig.h
-CLASS_SOURCES=server.cpp connection.cpp requestmgr.cpp nginx-configparser/config_parser.cc 
+HEADERS=HttpResponse.h HttpRequest.h HttpMessage.h server.h connection.h requestmgr.h nginx-configparser/config_parser.h requestconfig.h mime_types.hpp
+CLASS_SOURCES=server.cpp connection.cpp requestmgr.cpp nginx-configparser/config_parser.cc mime_types.cpp
 SOURCES=main.cpp $(CLASS_SOURCES)
 TESTFILES=server_test.cc connection_test.cc Http_test.cc requestmgr_test.cc
 all: webserver

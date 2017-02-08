@@ -24,6 +24,12 @@ class requestmgr {
   std::unique_ptr<HttpRequest> request_p;
   std::unique_ptr<HttpResponse> response_p;
   const std::vector<requestconfig>& requestConfigVector_;
+
+  // allow tests to access private members
+  #ifdef TEST_REQUESTMGR
+  FRIEND_TEST(requestmgr, BasicEchoTest);
+  FRIEND_TEST(requestmgr, BasicFileTest);
+  #endif
 };
 }
 }

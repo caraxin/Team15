@@ -1,5 +1,9 @@
 server {
 	listen 4000;
 	server_name 127.0.0.1;
-	root ~/Documents/Team15/;
+}
+
+path /echo EchoHandler;
+path /static StaticFileHandler {
+	root ~/files;
 }

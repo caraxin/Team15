@@ -8,8 +8,7 @@
 using namespace std;
 
 void parseValuePairs(unordered_map<string, string> &valuePairs, NginxConfig config) {
-
-  for (int k = 0; k < (int) config.statements_.size();k++) { 
+  for (int k = 0; k < (int) config.statements_.size(); k++) { 
 
     if (config.statements_[k]->tokens_.size() == 1) {
       parseValuePairs(valuePairs, *(config.statements_[k]->child_block_));
@@ -23,6 +22,10 @@ void parseValuePairs(unordered_map<string, string> &valuePairs, NginxConfig conf
 }
 
 int main(int argc, char** argv) {
+  if (argc != 2) {
+    std::cerr << "Usage:" << argv[0] << " config" << std::endl;
+    return 1;
+  }
 
   NginxConfigParser config_parser;
   NginxConfig config;
@@ -32,15 +35,15 @@ int main(int argc, char** argv) {
   unordered_map<string, string> valuePairs;
   parseValuePairs(valuePairs, config);
 
-  // printf("%s\n", valuePairs["listen"].c_str());
-  // printf("%s\n", valuePairs["server_name"].c_str());
+  //printf("%s\n", valuePairs["listen"].c_str());
+  //printf("%s\n", valuePairs["server_name"].c_str());
 
   //We need to construct something like this, currently hard coded:
   vector<requestconfig> vec;
   vec.push_back(requestconfig("/echo","EchoHandler"));
-  vec.push_back(requestconfig("/static","StaticFileHandler","~/Documents/Team15"));
+  vec.push_back(requestconfig("/static","StaticFileHandler","."));
   Team15::server::server s(valuePairs["server_name"],valuePairs["listen"],vec);   
   s.run();
-  
+
   return 0;
 }

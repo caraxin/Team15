@@ -41,4 +41,4 @@ class server
 }
 }
 
-#endif
+#endif // SERVER_H

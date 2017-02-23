@@ -89,4 +89,4 @@ inline std::string Request::ToString(void) const{
   return text;
 }
 
-#endif
+#endif // HTTP_REQUEST_H

@@ -31,7 +31,7 @@ namespace server{
           // Error incorrect config form; skip this statement
           continue;
         }
-        string handler = config.statements_[k].tokens_[1];
+        std::string handler = config.statements_[k].tokens_[1];
         registerPrefix("default", handler);
       }
 
@@ -68,7 +68,7 @@ namespace server{
     }
   }
   std::shared_ptr<RequestHandler> RequestMgr::getRequestHandler(const std::string& url) {
-    string current = url;
+    std::string current = url;
 
     while (current != "") {
       if (prefixMap.find(current) != prefixMap.end()) {

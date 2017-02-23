@@ -40,4 +40,4 @@ class connection
 }
 }
 
-#endif
+#endif // CONNECTION_H

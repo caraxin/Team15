@@ -16,7 +16,10 @@ class StaticHandler : public RequestHandler {
   boost::filesystem::path uri_prefix;
   boost::filesystem::path rootPath;
 };
+
+REGISTER_REQUEST_HANDLER(StaticHandler);
+
 }
 }
 
-#endif
+#endif // STATICHANDLER_H

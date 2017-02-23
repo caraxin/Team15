@@ -13,7 +13,10 @@ class EchoHandler : public RequestHandler {
   		Response* response);
 
 };
+
+REGISTER_REQUEST_HANDLER(EchoHandler);
+
 }
 }
 
-#endif
+#endif // ECHOHANDLER_H

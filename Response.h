@@ -47,5 +47,5 @@ inline std::string Response::ToString(void) const {
   return header_text() + body();
 }
 
-#endif
+#endif // HTTP_RESPONSE_H
 

@@ -13,7 +13,10 @@ class Http404Handler : public RequestHandler {
 				Response* response);
 
 };
+
+REGISTER_REQUEST_HANDLER(HTTP404Handler);
+
 }
 }
 
-#endif
+#endif // HTTP404HANDLER_H

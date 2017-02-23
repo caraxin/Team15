@@ -21,4 +21,4 @@ class RequestMgr {
 }
 }
 
-#endif
+#endif // REQUESTMGR_H

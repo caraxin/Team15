@@ -25,10 +25,49 @@ namespace server{
   static const std::string FILE_HANDLER = "StaticFileHandler";
 
   RequestMgr::RequestMgr(const NginxConfig& config) {
-    //setup Prefix Map
-    //Area for Byron
-    prefixMap.insert(std::make_pair("/echo",std::make_shared<EchoHandler>()));
+    for (int k = 0; k < (int) config.statements_.size(); k++) { 
+      if (config.statements_[k].tokens_[0] == "default") {
+        if (config.statements_[k].tokens_.size() < 2) {
+          // Error incorrect config form; skip this statement
+          continue;
+        }
+        string handler = config.statements_[k].tokens_[1];
+        registerPrefix("default", handler);
+      }
+
+      if (config.statements_[k].tokens_[0] == "path") {
+        if (config.statements_[k].tokens_.size() < 3) {
+          // Error incorrect config form; skip this statement
+          continue;
+        }
+
+        std::string path = config.statements_[k].tokens_[1];
+        std::string handler = config.statements_[k].tokens_[2];
+        registerPrefix(path, handler);
+      }
+    }
+    // prefixMap.insert(std::make_pair("/echo",std::make_shared<EchoHandler>()));
   }
+  void RequestMgr::registerPrefix(std::string path, std::string handler) {
+    if (prefixMap.find(path) != prefixMap.end()) {
+      // Error path is already registered
+      return;
+    }
+
+    // to add any extra handlers, add the appropriate case statement
+    switch(handler) {
+      case ECHO_HANDLER:
+        prefixMap.insert(std::make_pair(path, std::make_shared<EchoHandler>()));
+        break;
+      case FILE_HANDLER:
+        prefixMap.insert(std::make_pair(path, std::make_shared<StaticHandler>()));
+        break;
+      default:
+        // Error unknown handler specified
+    }
+  }
+
+
   std::shared_ptr<RequestHandler> RequestMgr::getRequestHandler(const std::string& url) {
     //do prefix logic here
     //Byron?

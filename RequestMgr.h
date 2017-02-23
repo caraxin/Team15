@@ -16,6 +16,7 @@ class RequestMgr {
 
 private:
 std::shared_ptr<RequestHandler> getRequestHandler(const std::string& url);
+void registerPrefix(std::string path, std::string handler);
 std::map<std::string,std::shared_ptr<RequestHandler>> prefixMap;
 };
 }

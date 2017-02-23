@@ -1,9 +1,13 @@
-server {
-	listen 4000;
-	server_name 127.0.0.1;
+
+# This is a comment.
+
+port 2020;  # This is also a comment.
+
+path / StaticHandler {
+  root /foo/bar;
 }
 
-path /echo EchoHandler;
-path /static StaticFileHandler {
-	root ~/files;
-}
+path /echo EchoHandler {}
+
+# Default response handler if no handlers match.
+default NotFoundHandler {}

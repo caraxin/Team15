@@ -6,7 +6,8 @@ namespace server {
 		    const NginxConfig& config) {
     return OK;
   }
-  RequestHandler::Status StatusHandler::HandleRequest(const Request& request, Response* response) {
+  RequestHandler::Status StatusHandler::HandleRequest(const Request& request, 
+        Response* response) {
 
     return OK;
   }

@@ -6,7 +6,8 @@ namespace server {
 		    const NginxConfig& config) {
     return OK;
 }
-  RequestHandler::Status StaticHandler::HandleRequest(const Request& request, Response* response) {
+  RequestHandler::Status StaticHandler::HandleRequest(const Request& request, 
+        Response* response) {
   /*std::string path = filePath.string();
 
     // default file

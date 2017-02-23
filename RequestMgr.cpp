@@ -47,6 +47,7 @@ namespace server{
       }
     }
     // prefixMap.insert(std::make_pair("/echo",std::make_shared<EchoHandler>()));
+    // Error if default handler is not set at this point?
   }
   void RequestMgr::registerPrefix(std::string path, std::string handler) {
     if (prefixMap.find(path) != prefixMap.end()) {
@@ -66,12 +67,20 @@ namespace server{
         // Error unknown handler specified
     }
   }
-
-
   std::shared_ptr<RequestHandler> RequestMgr::getRequestHandler(const std::string& url) {
-    //do prefix logic here
-    //Byron?
-    return prefixMap.at("/echo");
+    string current = url;
+
+    while (current != "") {
+      if (prefixMap.find(current) != prefixMap.end()) {
+        return prefixMap.at(current);
+      } else {
+        std::size_t pos = current.find_last_of('/');
+        if (pos = std::string::npos) break;
+        current = current.substr(0, pos);
+      }
+    }
+    // no handler found, return default
+    return prefixMap.at("default");
   }
   std::unique_ptr<Response> RequestMgr::HandleRequest(const std::string& raw_request) {
     std::unique_ptr<Request> request_p = Request::Parse(raw_request);

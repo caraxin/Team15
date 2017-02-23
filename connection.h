@@ -5,9 +5,9 @@
 #include <boost/asio.hpp>
 #include <array>
 #include <memory>
-#include "HttpRequest.h"
-#include "HttpResponse.h"
-#include "requestmgr.h"
+#include "Request.h"
+#include "Response.h"
+
 enum { max_length = 8192 };
 
 namespace Team15 {
@@ -29,7 +29,6 @@ class connection
   void read_handler(const boost::system::error_code& ec,std::size_t bytes_transferred);
   void start_writing();
   void write_handler(const boost::system::error_code& ec,std::size_t bytes_transferred);
-  requestmgr requestmgr_;
   boost::asio::ip::tcp::socket socket_;
   std::array<char,max_length> buffer_;  
   server* server_;

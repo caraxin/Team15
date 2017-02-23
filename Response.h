@@ -4,6 +4,7 @@
 #include <string>
 #include <boost/tokenizer.hpp>
 #include <memory>
+
 class Response : public HttpMessage
 {
  public:
@@ -30,8 +31,6 @@ class Response : public HttpMessage
   std::string reasoning_;
   std::string body_;
 };
-
-
 
 inline std::string Response::header_text(void) const {
   std::string text = version() + " " + statuscode() + " " + reasoning() + "\r\n";

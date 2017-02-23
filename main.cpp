@@ -20,7 +20,6 @@ string getRootFromChild(NginxConfig config) {
   return "";
 }
 
-
 void parseValuePairs(unordered_map<string, string> &valuePairs,vector<requestconfig> &vec, NginxConfig config) {
   for (int k = 0; k < (int) config.statements_.size(); k++) { 
 
@@ -46,7 +45,6 @@ void parseValuePairs(unordered_map<string, string> &valuePairs,vector<requestcon
     }
   }
 }
-
 
 int main(int argc, char** argv) {
   if (argc != 2) {

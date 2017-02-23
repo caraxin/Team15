@@ -11,7 +11,6 @@
 namespace Team15 {
 namespace server {
   
-
 class RequestHandler {
  public:
   enum Status {

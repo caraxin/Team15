@@ -5,6 +5,7 @@
 #include <boost/bind.hpp>
 namespace Team15 {
 namespace server {
+  
   connection::connection(boost::asio::ip::tcp::socket socket,server* server):socket_(std::move(socket)),buffer_(),server_(server) {
   }
   void connection::start() {
@@ -22,15 +23,11 @@ namespace server {
   }
   void connection::read_handler(const boost::system::error_code& ec,std::size_t bytes_transferred) {
     if (!ec) {
-      parse_request(bytes_transferred);
       start_writing();
     }
     else {
       server_->connection_done(this);
     }
-  }
-  void connection::parse_request(std::size_t request_length) {
-
   }
 
   void connection::start_writing() {

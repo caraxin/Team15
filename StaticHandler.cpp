@@ -1,5 +1,4 @@
 #include "StaticHandler.h"
-
 namespace Team15 {
 namespace server {
 

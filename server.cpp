@@ -27,6 +27,7 @@ namespace server {
       fprintf(stderr, "Error: Invalid port input");
       exit(1);
     }
+
     boost::asio::ip::tcp::resolver resolver(io_service_);
     boost::asio::ip::tcp::endpoint endpoint = *resolver.resolve({address, port});
     acceptor_.open(endpoint.protocol());

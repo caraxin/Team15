@@ -35,7 +35,7 @@ then
     echo "SUCCESS: Integration test passed"
 else
     echo "FAILED: Integration test failed"
-    echo "diff: "
+    echo "diff:"
     echo $DIFF
 fi
 

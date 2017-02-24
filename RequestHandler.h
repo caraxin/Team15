@@ -21,7 +21,7 @@ class RequestHandler {
   };
   static RequestHandler* CreateByName(const char* type);
   virtual Status Init(const std::string& uri_prefix,
-		      const NginxConfig& config) = 0;
+		      NginxConfig config) = 0;
   virtual Status HandleRequest(const Request& request, Response* response) = 0;
  private:
   

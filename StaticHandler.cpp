@@ -7,7 +7,22 @@ namespace Team15 {
 namespace server {
 
   RequestHandler::Status StaticHandler::Init(const std::string& uri_prefix,
-		    const NginxConfig& config) {
+		    NginxConfig config) {
+
+    std::string root = "";
+    for (auto statement : config.statements_) {
+      if (statement->tokens_[0] == "root") {
+        root = statement->tokens_[1];
+        break;
+      }
+    }
+    if (root == "") {
+      // Error no root for file handler
+      return RequestHandler::Status::INVALID_INPUT;
+    }
+
+    rootPath = root;
+
     return RequestHandler::Status::OK;
 }
   RequestHandler::Status StaticHandler::HandleRequest(const Request& request, 

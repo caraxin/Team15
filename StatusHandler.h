@@ -10,7 +10,7 @@ namespace server {
 class StatusHandler : public RequestHandler {
  public:
   virtual RequestHandler::Status Init(const std::string& uri_prefix,
-        const NginxConfig& config);
+        NginxConfig config);
   virtual RequestHandler::Status HandleRequest(const Request& request, 
         Response* response);
  private:

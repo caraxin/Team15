@@ -6,7 +6,7 @@ namespace Team15 {
 namespace server {
 
   RequestHandler::Status StatusHandler::Init(const std::string& uri_prefix,
-		    const NginxConfig& config) {
+		    NginxConfig config) {
     return RequestHandler::Status::OK;
   }
   RequestHandler::Status StatusHandler::HandleRequest(const Request& request, 

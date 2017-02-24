@@ -25,6 +25,7 @@ namespace server{
   static const std::string FILE_HANDLER = "StaticFileHandler";
 
   RequestMgr::RequestMgr(const NginxConfig& config) {
+
     for (int k = 0; k < (int) config.statements_.size(); k++) { 
       if (config.statements_[k]->tokens_[0] == "default") {
         if (config.statements_[k]->tokens_.size() < 2) {
@@ -32,7 +33,7 @@ namespace server{
           continue;
         }
         std::string handler = config.statements_[k]->tokens_[1];
-        registerPrefix("default", handler);
+        registerPrefix("default", handler, config);
       }
 
       if (config.statements_[k]->tokens_[0] == "path") {
@@ -43,13 +44,14 @@ namespace server{
 
         std::string path = config.statements_[k]->tokens_[1];
         std::string handler = config.statements_[k]->tokens_[2];
-        registerPrefix(path, handler);
+        std::cout << "Registering prefix" << std::endl;
+        registerPrefix(path, handler, *(config.statements_[k]->child_block_));
       }
     }
     // prefixMap.insert(std::make_pair("/echo",std::make_shared<EchoHandler>()));
     // Error if default handler is not set at this point?
   }
-  void RequestMgr::registerPrefix(std::string path, std::string handler) {
+  void RequestMgr::registerPrefix(std::string path, std::string handler, NginxConfig config) {
     if (prefixMap.find(path) != prefixMap.end()) {
       // Error path is already registered
       return;
@@ -61,6 +63,7 @@ namespace server{
     }
     else if (handler == FILE_HANDLER) {
       prefixMap.insert(std::make_pair(path, std::make_shared<StaticHandler>()));
+      prefixMap[path]->Init("", config);
     }
     else {
       // Error unknown handler specified

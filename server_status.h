@@ -1,7 +1,7 @@
 #ifndef SERVER_STATUS_H
 #define SERVER_STATUS_H
 
-#include "request_handler.hpp"
+#include "RequestHandler.h"
 namespace Team15 {
 namespace server {
 

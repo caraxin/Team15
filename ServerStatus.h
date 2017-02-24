@@ -13,7 +13,7 @@ class ServerStatus {
           const std::string& handler_name);
   void insertRequest(const std::string& uri, 
           RequestHandler::Status status);
-  int getNumRequests() { return requests.size(); }
+  int getNumRequests() { return requests_.size(); }
   void resetStatus();
 
   std::vector<std::pair<std::string, std::string>> getHandlers() const 
@@ -22,7 +22,7 @@ class ServerStatus {
           getRequests() const { return requests_; }
 
  private:
-  serverstatus() {} 
+  ServerStatus() {} 
 
   std::vector<std::pair<std::string, std::string>> handlers_;        
   std::vector<std::pair<std::string, RequestHandler::Status>> requests_;

@@ -1,3 +1,5 @@
+// Based off https://github.com/UCLA-CS130/Team07/blob/master/server_stats.hpp
+
 #ifndef SERVER_STATUS_H
 #define SERVER_STATUS_H
 

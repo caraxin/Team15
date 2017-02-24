@@ -1,3 +1,5 @@
+// Based off https://github.com/UCLA-CS130/Team07/blob/master/server_stats.cpp
+
 #include "ServerStatus.h"
 
 namespace Team15 {

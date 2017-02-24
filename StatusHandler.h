@@ -1,3 +1,5 @@
+// Based off https://github.com/UCLA-CS130/Team07/blob/master/status_handler.hpp
+
 #ifndef STATUSHANDLER_H
 #define STATUSHANDLER_H
 

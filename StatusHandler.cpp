@@ -1,3 +1,5 @@
+// https://github.com/UCLA-CS130/Team07/blob/master/status_handler.cpp
+
 #include "StatusHandler.h"
 #include "ServerStatus.h"
 namespace Team15 {
@@ -19,7 +21,29 @@ namespace server {
     return RequestHandler::Status::OK;
   }
   std::string StatusHandler::createBody() {
-    std::string body = "";
+    int numRequests = ServerStatus::getInstance().getNumRequests();
+    std::vector<std::pair<std::string, std::string>> handlers = ServerStatus::getInstance().getHandlers();
+    std::vector<std::pair<std::string, RequestHandler::Status>> requests = ServerStatus::getInstance().getRequests();
+
+    std::string body = "<html>";
+    body += "<head><title>Server Status</title></head>";
+    body += "<h2>Handlers</h2>";
+    body += "<table><tr><th>URL Prefix</th><th>Handler</th></tr>";
+    
+    for (unsigned int i = 0; i < handlers.size(); i++) {
+      body += "<tr><td>" + handlers[i].first + "</td><td>"+ handlers[i].second + "</td></tr>"; 
+    }
+
+    body += "</table><br>"; 
+    body += "<h2>Requests</h2>";
+    body += "<p>Number of Requests: " + std::to_string(numRequests) + "</p>" ;
+    body += "<table><tr><th>URL Requested</th><th>Response Code</th></tr>";
+
+    for (unsigned int i = 0; i < requests.size(); i++) {
+      body += "<tr><td>" + requests[i].first + "</td><td>"+ std::to_string(requests[i].second) + "</td></tr>"; 
+    }
+
+    body += "</table></html>";
 
     return body;    
   }

@@ -9,7 +9,7 @@ namespace server {
   RequestHandler::Status Http404Handler::HandleRequest(const Request& request, 
         Response* response) {
     std::string body = "<html><body><h1>404 Not Found</h1></body></html>";
-    std::string content_length = std::to_string((int) request.body().size());
+    std::string content_length = std::to_string((int) body.size());
     response->SetStatus(Response::ResponseCodeNOT_FOUND);
     response->SetReasoning"NOT_FOUND");
     response->AddHeader("Content-Type", "text/plain");

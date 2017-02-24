@@ -14,7 +14,7 @@ class StatusHandler : public RequestHandler {
 
 };
 
-REGISTER_REQUEST_HANDLER(StatusHandler);
+//REGISTER_REQUEST_HANDLER(StatusHandler);
 
 }
 }

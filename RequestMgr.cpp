@@ -56,6 +56,16 @@ namespace server{
     }
 
     // to add any extra handlers, add the appropriate case statement
+    if(handler == ECHO_HANDLER) {
+      prefixMap.insert(std::make_pair(path, std::make_shared<EchoHandler>()));
+    }
+    else if (handler == FILE_HANDLER) {
+      prefixMap.insert(std::make_pair(path, std::make_shared<StaticHandler>()));
+    }
+    else {
+      // Error unknown handler specified
+    }
+    /*
     switch(handler) {
       case ECHO_HANDLER:
         prefixMap.insert(std::make_pair(path, std::make_shared<EchoHandler>()));
@@ -66,6 +76,7 @@ namespace server{
       default:
         // Error unknown handler specified
     }
+    */
   }
   std::shared_ptr<RequestHandler> RequestMgr::getRequestHandler(const std::string& url) {
     std::string current = url;
@@ -75,7 +86,7 @@ namespace server{
         return prefixMap.at(current);
       } else {
         std::size_t pos = current.find_last_of('/');
-        if (pos = std::string::npos) break;
+        if ((pos = std::string::npos)) break;
         current = current.substr(0, pos);
       }
     }

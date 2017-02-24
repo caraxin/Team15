@@ -17,7 +17,7 @@ class StaticHandler : public RequestHandler {
   boost::filesystem::path rootPath;
 };
 
-REGISTER_REQUEST_HANDLER(StaticHandler);
+//REGISTER_REQUEST_HANDLER(StaticHandler);
 
 }
 }

@@ -14,7 +14,7 @@ class Http404Handler : public RequestHandler {
 
 };
 
-REGISTER_REQUEST_HANDLER(HTTP404Handler);
+//REGISTER_REQUEST_HANDLER(HTTP404Handler);
 
 }
 }

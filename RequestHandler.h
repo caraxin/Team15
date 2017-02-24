@@ -38,6 +38,7 @@ class RequestHandler {
   //FRIEND_TEST(requestmgr, BasicFileTest);
 };
 
+/*
 extern std::map<std::string, RequestHandler* (*)(void)>* request_handler_builders;
 template<typename T>
 class RequestHandlerRegisterer {
@@ -52,10 +53,10 @@ class RequestHandlerRegisterer {
     return new T;
   }
 };
-
 #define REGISTER_REQUEST_HANDLER(ClassName) \
   static RequestHandlerRegisterer<ClassName> ClassName##__registerer(#ClassName)
-
+*/
+  
 }
 }
 

@@ -14,7 +14,7 @@ class EchoHandler : public RequestHandler {
 
 };
 
-REGISTER_REQUEST_HANDLER(EchoHandler);
+//REGISTER_REQUEST_HANDLER(EchoHandler);
 
 }
 }

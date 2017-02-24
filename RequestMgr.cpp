@@ -26,23 +26,23 @@ namespace server{
 
   RequestMgr::RequestMgr(const NginxConfig& config) {
     for (int k = 0; k < (int) config.statements_.size(); k++) { 
-      if (config.statements_[k].tokens_[0] == "default") {
-        if (config.statements_[k].tokens_.size() < 2) {
+      if (config.statements_[k]->tokens_[0] == "default") {
+        if (config.statements_[k]->tokens_.size() < 2) {
           // Error incorrect config form; skip this statement
           continue;
         }
-        std::string handler = config.statements_[k].tokens_[1];
+        std::string handler = config.statements_[k]->tokens_[1];
         registerPrefix("default", handler);
       }
 
-      if (config.statements_[k].tokens_[0] == "path") {
-        if (config.statements_[k].tokens_.size() < 3) {
+      if (config.statements_[k]->tokens_[0] == "path") {
+        if (config.statements_[k]->tokens_.size() < 3) {
           // Error incorrect config form; skip this statement
           continue;
         }
 
-        std::string path = config.statements_[k].tokens_[1];
-        std::string handler = config.statements_[k].tokens_[2];
+        std::string path = config.statements_[k]->tokens_[1];
+        std::string handler = config.statements_[k]->tokens_[2];
         registerPrefix(path, handler);
       }
     }

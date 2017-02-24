@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include "HttpMessage.h"
-#include "HttpResponse.h"
+#include "Response.h"
 #include "HttpRequest.h"
 
 TEST(HttpResponse, BasicBody) {

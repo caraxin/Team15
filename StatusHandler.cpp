@@ -8,7 +8,7 @@ namespace server {
   }
   RequestHandler::Status StatusHandler::HandleRequest(const Request& request, 
         Response* response) {
-    std::string body = "";
+    std::string body = createBody();
     std::string content_length = std::to_string((int) body.size());
     response->SetStatus(Response::ResponseCodeNOT_FOUND);
     response->SetReasoning"NOT_FOUND");
@@ -16,6 +16,11 @@ namespace server {
     response->AddHeader("Content-Length", content_length);
     response->SetBody(body);
     return OK;
+  }
+  std::string createBody() {
+    std::string body = "";
+
+    return body;    
   }
 }
 }

@@ -67,7 +67,8 @@ int main(int argc, char** argv) {
   //vec.push_back(requestconfig("/echo","EchoHandler"));
   //vec.push_back(requestconfig("/static","StaticFileHandler","."));
 
-  Team15::server::server s(valuePairs["server_name"],valuePairs["listen"],config);   
+  cout << valuePairs["port"] << endl;
+  Team15::server::server s(valuePairs["server_name"],valuePairs["port"],config);   
   s.run();
 
   return 0;

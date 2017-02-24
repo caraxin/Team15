@@ -1,4 +1,8 @@
 #include "StaticHandler.h"
+#include "Http404Handler.h"
+#include "mime_types.hpp"
+#include <iterator>
+#include <fstream>
 namespace Team15 {
 namespace server {
 
@@ -8,7 +12,7 @@ namespace server {
 }
   RequestHandler::Status StaticHandler::HandleRequest(const Request& request, 
         Response* response) {
-  /*std::string path = filePath.string();
+    std::string path = rootPath.string();
 
     // default file
     if (path[path.size() - 1] == '/') {
@@ -26,23 +30,23 @@ namespace server {
     // open file
     std::ifstream is(path.c_str(), std::ios::in | std::ios::binary);
     if (!is) {
-      doServeError(NOTFOUND_CODE,NOTFOUND_REASON);
-      return;
+      not_found_handler_->HandleRequest(request, response);
+      return NOT_FOUND;
     }
     char c;
-    std::string str;
+    std::string body;
     while (is.get(c)) {
-      str += c;
+      body += c;
     }
     is.close();
-    std::unique_ptr<char> wire(new char[str.length()]);
-    strcpy(wire.get(), str.c_str());
 
-    // generate response
-    response_p.reset(new HttpResponse(OK, "OK", std::move(wire),str.length()));
-    //wire is now invalid, do not use!!
-    response_p->setHeaderField(HttpMessage::HttpHeaderFields::CONTENT_TYPE,http::server::mime_types::extension_to_type(extension));
-  */
+    std::string content_length = std::to_string((int) body.size());
+    response->SetStatus(Response::ResponseCodeOK);
+    response->SetReasoning("OK");
+    response->AddHeader("Content-Type", http::server::mime_types::extension_to_type(extension));
+    response->AddHeader("Content-Length", content_length);
+    response->SetBody(body);
+  
   return OK;
 }
 

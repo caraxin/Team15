@@ -83,7 +83,7 @@ namespace server{
 
     while (current != "") {
       if (prefixMap.find(current) != prefixMap.end()) {
-        return prefixMap.at(current);
+        return prefixMap[current];
       } else {
         std::size_t pos = current.find_last_of('/');
         if ((pos = std::string::npos)) break;

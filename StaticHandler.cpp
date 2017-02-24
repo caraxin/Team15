@@ -8,7 +8,7 @@ namespace server {
 
   RequestHandler::Status StaticHandler::Init(const std::string& uri_prefix,
 		    const NginxConfig& config) {
-    return OK;
+    return RequestHandler::Status::OK;
 }
   RequestHandler::Status StaticHandler::HandleRequest(const Request& request, 
         Response* response) {
@@ -47,7 +47,7 @@ namespace server {
     response->AddHeader("Content-Length", content_length);
     response->SetBody(body);
   
-  return OK;
+  return RequestHandler::Status::OK;
 }
 
 }

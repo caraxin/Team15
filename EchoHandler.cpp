@@ -4,7 +4,7 @@ namespace server {
 
   RequestHandler::Status EchoHandler::Init(const std::string& uri_prefix,
 		    const NginxConfig& config) {
-    return OK;
+    return RequestHandler::Status::OK;
   }
   RequestHandler::Status EchoHandler::HandleRequest(const Request& request, 
         Response* response) {
@@ -14,7 +14,7 @@ namespace server {
     response->AddHeader("Content-Type","text/plain");
     response->AddHeader("Content-Length", content_length);
     response->SetBody(request.body());
-    return OK;
+    return RequestHandler::Status::OK;
   }
 }
 }

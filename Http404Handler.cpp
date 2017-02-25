@@ -3,7 +3,7 @@ namespace Team15 {
 namespace server {
 
   RequestHandler::Status Http404Handler::Init(const std::string& uri_prefix,
-		    const NginxConfig& config) {
+		    NginxConfig config) {
     return RequestHandler::Status::OK;
   }
   RequestHandler::Status Http404Handler::HandleRequest(const Request& request, 

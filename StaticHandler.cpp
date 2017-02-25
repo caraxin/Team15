@@ -42,18 +42,29 @@ namespace server {
       extension = path.substr(last_dot_pos + 1);
     }
 
+
+
     // open file
+    std::cout << path << std::endl;
+
     std::ifstream is(path.c_str(), std::ios::in | std::ios::binary);
+
+    std::cout << "First" << std::endl;
+    
+
     if (!is) {
       not_found_handler_->HandleRequest(request, response);
       return NOT_FOUND;
     }
+
     char c;
     std::string body;
     while (is.get(c)) {
       body += c;
     }
     is.close();
+
+    std::cout << "Second" << std::endl;
 
     std::string content_length = std::to_string((int) body.size());
     response->SetStatus(Response::ResponseCodeOK);

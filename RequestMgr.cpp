@@ -7,6 +7,8 @@
 #include <fstream>
 #include "EchoHandler.h"
 #include "StaticHandler.h"
+#include "Http404Handler.h"
+
 namespace Team15{
 namespace server{
   //Http Methods
@@ -22,7 +24,8 @@ namespace server{
   
   //Root URLS
   static const std::string ECHO_HANDLER = "EchoHandler";
-  static const std::string FILE_HANDLER = "StaticFileHandler";
+  static const std::string FILE_HANDLER = "StaticHandler";
+  static const std::string HTTP_404_HANDLER = "NotFoundHandler";
 
   RequestMgr::RequestMgr(const NginxConfig& config) {
 
@@ -44,7 +47,7 @@ namespace server{
 
         std::string path = config.statements_[k]->tokens_[1];
         std::string handler = config.statements_[k]->tokens_[2];
-        std::cout << "Registering prefix" << std::endl;
+        std::cout << "Registering prefix " << path << std::endl;
         registerPrefix(path, handler, *(config.statements_[k]->child_block_));
       }
     }
@@ -60,9 +63,14 @@ namespace server{
     // to add any extra handlers, add the appropriate case statement
     if(handler == ECHO_HANDLER) {
       prefixMap.insert(std::make_pair(path, std::make_shared<EchoHandler>()));
+      prefixMap[path]->Init("", config);
     }
     else if (handler == FILE_HANDLER) {
       prefixMap.insert(std::make_pair(path, std::make_shared<StaticHandler>()));
+      prefixMap[path]->Init("", config);
+    }
+    else if (handler == HTTP_404_HANDLER) {
+      prefixMap.insert(std::make_pair(path, std::make_shared<Http404Handler>()));
       prefixMap[path]->Init("", config);
     }
     else {
@@ -83,10 +91,9 @@ namespace server{
   }
   std::shared_ptr<RequestHandler> RequestMgr::getRequestHandler(const std::string& url) {
     std::string current = url;
-
     while (current != "") {
       if (prefixMap.find(current) != prefixMap.end()) {
-        return prefixMap[current];
+        return prefixMap.at(current);
       } else {
         std::size_t pos = current.find_last_of('/');
         if ((pos = std::string::npos)) break;

@@ -2,13 +2,18 @@
 #include "connection.h"
 #include "server.h"
 #include <boost/asio.hpp>
+
 TEST(connection, BasicTest) {
   std::string addr = "127.0.0.1";
   std::string port = "4000";
+  /*
   std::vector<requestconfig> rc;
   rc.push_back(requestconfig("/echo", "EchoHandler"));
   rc.push_back(requestconfig("/echo", "EchoHandler"));
   Team15::server::server server(addr, port, rc);
+  */
+  NginxConfig config;
+  Team15::server::server server(addr, port, config);
   Team15::server::connection con(boost::asio::ip::tcp::socket(server.getService()),&server);
 }
 /*

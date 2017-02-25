@@ -8,7 +8,7 @@ path / StaticHandler {
   root ./static/;
 }
 
-path /echo EchoHandler{}
+path /echo EchoHandler;
 
 # Default response handler if no handlers match.
-default NotFoundHandler{}
+default NotFoundHandler;

@@ -20,7 +20,6 @@ string getRootFromChild(NginxConfig config) {
   return "";
 }
 
-
 void parseValuePairs(unordered_map<string, string> &valuePairs,vector<requestconfig> &vec, NginxConfig config) {
   for (int k = 0; k < (int) config.statements_.size(); k++) { 
 
@@ -47,7 +46,6 @@ void parseValuePairs(unordered_map<string, string> &valuePairs,vector<requestcon
   }
 }
 
-
 int main(int argc, char** argv) {
   if (argc != 2) {
     std::cerr << "Usage:" << argv[0] << " config" << std::endl;
@@ -69,7 +67,8 @@ int main(int argc, char** argv) {
   //vec.push_back(requestconfig("/echo","EchoHandler"));
   //vec.push_back(requestconfig("/static","StaticFileHandler","."));
 
-  Team15::server::server s(valuePairs["server_name"],valuePairs["listen"],vec);   
+  cout << valuePairs["port"] << endl;
+  Team15::server::server s(valuePairs["server_name"],valuePairs["port"],config);   
   s.run();
 
   return 0;

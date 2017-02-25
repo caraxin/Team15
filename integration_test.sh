@@ -5,10 +5,20 @@ make clean
 make
 
 # Start the server
-echo "server {
-	listen 4000;
-	server_name 127.0.0.1;
-}" > test_config
+echo "
+# This is a comment.
+
+port 2020;  # This is also a comment.
+server_name 127.0.0.1;
+
+path / StaticHandler {
+  root /foo/bar;
+}
+
+path /echo EchoHandler;
+
+# Default response handler if no handlers match.
+default NotFoundHandler;" > test_config
 #./webserver test_config &>/dev/null &
 ./webserver test_config &
 
@@ -25,7 +35,7 @@ then
     echo "SUCCESS: Integration test passed"
 else
     echo "FAILED: Integration test failed"
-    echo "diff: "
+    echo "diff:"
     echo $DIFF
 fi
 

@@ -20,9 +20,9 @@ std::map<RequestMethod, std::string> RequestMethodMap = {{GET,"GET"}};
   //constructors
  static std::unique_ptr<Request> Parse(const std::string& raw_request);
 
-  //get and set url and method
-  std::string uri(void) const { return url_; }
-  void SetUrl(const std::string& _url) { url_ =_url; } 
+  //get and set uri and method
+  std::string uri(void) const { return uri_; }
+  void Seturi(const std::string& _uri) { uri_ =_uri; } 
   std::string method(void) const { return method_; }
   void SetMethod(const std::string& _method) { method_ = _method; }
   std::string body(void) const { return body_; }
@@ -33,7 +33,7 @@ std::map<RequestMethod, std::string> RequestMethodMap = {{GET,"GET"}};
   std::string ToString(void) const;
 
  private:
-  std::string url_;
+  std::string uri_;
   std::string method_;
   std::string body_;
 };
@@ -54,7 +54,7 @@ inline std::unique_ptr<Request> Request::Parse(const std::string& raw_request ) 
   	  tokenizer::iterator it1= tokens.begin();
   	  request->SetMethod(*it1);
   	  std::advance(it1,1);
-  	  request->SetUrl(*it1);
+  	  request->Seturi(*it1);
   	  std::advance(it1,1);
   	  request->SetVersion(*it1);
     }

@@ -3,6 +3,7 @@
 #include "mime_types.hpp"
 #include <iterator>
 #include <fstream>
+#include <string>
 namespace Team15 {
 namespace server {
 
@@ -21,13 +22,21 @@ namespace server {
       return RequestHandler::Status::INVALID_INPUT;
     }
 
-    rootPath = root;
+    rootPath_ = root;
 
     return RequestHandler::Status::OK;
 }
   RequestHandler::Status StaticHandler::HandleRequest(const Request& request, 
         Response* response) {
-    std::string path = rootPath.string();
+    std::string path = rootPath_.string();
+
+    // start from current directory
+    if (path[0] == '/') {
+      path = '.' + path;
+    }
+
+    // Connect file with root path
+    path = path + request.uri();
 
     // default file
     if (path[path.size() - 1] == '/') {

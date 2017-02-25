@@ -1,7 +1,7 @@
 #define TEST_REQUESTMGR
 
 #include "gtest/gtest.h"
-#include "requestmgr.h"
+#include "RequestMgr.h"
 #include "Response.h"
 namespace Team15 {
 namespace server {

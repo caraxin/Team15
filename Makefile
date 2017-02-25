@@ -4,7 +4,7 @@ CFLAGS=-g -std=c++11 -lboost_system -lboost_filesystem -Wall -Werror -lpthread
 HEADERS=Response.h Request.h HttpMessage.h server.h connection.h RequestMgr.h RequestHandler.h EchoHandler.h StaticHandler.h nginx-configparser/config_parser.h requestconfig.h mime_types.hpp Http404Handler.h StatusHandler.h ServerStatus.h
 CLASS_SOURCES=server.cpp connection.cpp RequestMgr.cpp EchoHandler.cpp StaticHandler.cpp nginx-configparser/config_parser.cc mime_types.cpp Http404Handler.cpp StatusHandler.cpp ServerStatus.cpp
 SOURCES=main.cpp $(CLASS_SOURCES)
-TESTFILES=server_test.cc connection_test.cc Http_test.cc requestmgr_test.cc RequestHandler_test.cc EchoHandler_test.cc StaticHandler_test.cc Http404Handler_test.cc StatusHandler_test.cc ServerStatus_test.cc
+TESTFILES=server_test.cc connection_test.cc Http_test.cc RequestMgr_test.cc RequestHandler_test.cc EchoHandler_test.cc StaticHandler_test.cc Http404Handler_test.cc StatusHandler_test.cc ServerStatus_test.cc
 all: webserver
 
 webserver : $(SOURCES) $(HEADERS)

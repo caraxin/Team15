@@ -97,8 +97,7 @@ namespace server{
       }
     }
 
-    // no handler found, return default
-    return prefixMap.at("default");
+    return prefixMap.at("/");
   }
   std::unique_ptr<Response> RequestMgr::HandleRequest(const std::string& raw_request) {
     std::unique_ptr<Request> request_p = Request::Parse(raw_request);

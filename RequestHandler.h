@@ -16,8 +16,7 @@ class RequestHandler {
  public:
   enum Status {
     OK = 0,
-    INVALID_INPUT = 1,
-    NOT_FOUND = 2
+    INVALID_INPUT = 1
   };
   static RequestHandler* CreateByName(const char* type);
   virtual Status Init(const std::string& uri_prefix,

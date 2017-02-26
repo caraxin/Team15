@@ -14,7 +14,7 @@ class RequestMgr {
   std::unique_ptr<Response> HandleRequest(const std::string& raw_request);
   
  private:
-  std::shared_ptr<RequestHandler> getRequestHandler(const std::string& url);
+  std::shared_ptr<RequestHandler> getRequestHandler(const std::string& uri);
   void registerPrefix(std::string path, std::string handler, NginxConfig config);
   std::map<std::string,std::shared_ptr<RequestHandler>> prefixMap;
 };

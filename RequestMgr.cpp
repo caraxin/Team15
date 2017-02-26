@@ -10,6 +10,7 @@
 #include "StaticHandler.h"
 #include "NotFoundHandler.h"
 #include "ServerStatus.h"
+#include "RequestHandler.h"
 
 namespace Team15{
 namespace server{
@@ -26,7 +27,7 @@ namespace server{
   
   //Root URIS
   static const std::string ECHO_HANDLER = "EchoHandler";
-  static const std::string FILE_HANDLER = "StaticHandler";
+  static const std::string STATIC_HANDLER = "StaticHandler";
   static const std::string STATUS_HANDLER = "StatusHandler";
   static const std::string NOT_FOUND_HANDLER = "NotFoundHandler";
 
@@ -74,7 +75,7 @@ namespace server{
       prefixMap[path]->Init("", config);
       ServerStatus::getInstance().insertHandler(path, handler);
     }
-    else if (handler == FILE_HANDLER) {
+    else if (handler == STATIC_HANDLER) {
       prefixMap.insert(std::make_pair(path, std::make_shared<StaticHandler>()));
       prefixMap[path]->Init("", config);
       ServerStatus::getInstance().insertHandler(path, handler);
@@ -97,6 +98,10 @@ namespace server{
       }
     }
 
+    if (uri.length() >= 2 && uri[0] == '/' && uri[1] == '/') { 
+      // default
+      return prefixMap.at("default");
+    }
     return prefixMap.at("/");
   }
   std::unique_ptr<Response> RequestMgr::HandleRequest(const std::string& raw_request) {

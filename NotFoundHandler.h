@@ -11,7 +11,6 @@ class NotFoundHandler : public RequestHandler {
 				NginxConfig config);
 	virtual RequestHandler::Status HandleRequest(const Request& request, 
 				Response* response);
- private:
 
 };
 

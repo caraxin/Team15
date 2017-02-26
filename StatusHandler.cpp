@@ -13,7 +13,7 @@ namespace server {
         Response* response) {
     std::string body = StatusHandler::createBody();
     std::string content_length = std::to_string((int) body.size());
-    response->SetStatus(Response::ResponseCodeNOT_FOUND);
+    response->SetStatus(Response::ResponseCodeOK);
     response->SetReasoning("NOT_FOUND");
     response->AddHeader("Content-Type", "text/html");
     response->AddHeader("Content-Length", content_length);
@@ -23,24 +23,24 @@ namespace server {
   std::string StatusHandler::createBody() {
     int numRequests = ServerStatus::getInstance().getNumRequests();
     std::vector<std::pair<std::string, std::string>> handlers = ServerStatus::getInstance().getHandlers();
-    std::vector<std::pair<std::string, RequestHandler::Status>> requests = ServerStatus::getInstance().getRequests();
+    std::vector<std::pair<std::string, std::string>> requests = ServerStatus::getInstance().getRequests();
 
     std::string body = "<!DOCTYPE <html>";
     body += "<head><title>Server Status</title></head>";
     body += "<h2>Handlers</h2>";
-    body += "<table><tr><th>URL Prefix</th><th>Handler</th></tr>";
+    body += "<table><tr><th>URI Prefix</th><th>Request Handler</th></tr>";
     
     for (unsigned int i = 0; i < handlers.size(); i++) {
-      body += "<tr><td>" + handlers[i].first + "</td><td>"+ handlers[i].second + "</td></tr>"; 
+      body += "<tr><td>" + handlers[i].first + "</td><td>" + handlers[i].second + "</td></tr>"; 
     }
 
     body += "</table><br>"; 
     body += "<h2>Requests</h2>";
     body += "<p>Number of Requests: " + std::to_string(numRequests) + "</p>" ;
-    body += "<table><tr><th>URL Requested</th><th>Response Code</th></tr>";
+    body += "<table><tr><th>URI Requested</th><th>Response Code</th></tr>";
 
     for (unsigned int i = 0; i < requests.size(); i++) {
-      body += "<tr><td>" + requests[i].first + "</td><td>"+ std::to_string(requests[i].second) + "</td></tr>"; 
+      body += "<tr><td>" + requests[i].first + "</td><td>" + requests[i].second + "</td></tr>"; 
     }
 
     body += "</table></html>";

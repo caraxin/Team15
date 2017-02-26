@@ -9,6 +9,7 @@
 #include "StatusHandler.h"
 #include "StaticHandler.h"
 #include "NotFoundHandler.h"
+#include "ServerStatus.h"
 
 namespace Team15{
 namespace server{
@@ -66,34 +67,23 @@ namespace server{
     if(handler == ECHO_HANDLER) {
       prefixMap.insert(std::make_pair(path, std::make_shared<EchoHandler>()));
       prefixMap[path]->Init("", config);
+      ServerStatus::getInstance().insertHandler(path, handler);
     }
     if(handler == STATUS_HANDLER) {
       prefixMap.insert(std::make_pair(path, std::make_shared<StatusHandler>()));
       prefixMap[path]->Init("", config);
+      ServerStatus::getInstance().insertHandler(path, handler);
     }
     else if (handler == FILE_HANDLER) {
       prefixMap.insert(std::make_pair(path, std::make_shared<StaticHandler>()));
       prefixMap[path]->Init("", config);
+      ServerStatus::getInstance().insertHandler(path, handler);
     }
-    else if (handler == NOT_FOUND_HANDLER) {
+    else { // default is NotFoundHandler
       prefixMap.insert(std::make_pair(path, std::make_shared<NotFoundHandler>()));
       prefixMap[path]->Init("", config);
+      ServerStatus::getInstance().insertHandler(path, NOT_FOUND_HANDLER);
     }
-    else {
-      // Error unknown handler specified
-    }
-    /*
-    switch(handler) {
-      case ECHO_HANDLER:
-        prefixMap.insert(std::make_pair(path, std::make_shared<EchoHandler>()));
-        break;
-      case FILE_HANDLER:
-        prefixMap.insert(std::make_pair(path, std::make_shared<StaticHandler>()));
-        break;
-      default:
-        // Error unknown handler specified
-    }
-    */
   }
   std::shared_ptr<RequestHandler> RequestMgr::getRequestHandler(const std::string& uri) {
     std::string current = uri;
@@ -115,6 +105,7 @@ namespace server{
     auto handler = getRequestHandler(request_p->uri());
     auto response = std::unique_ptr<Response>(new Response());
     RequestHandler::Status status = handler->HandleRequest(*request_p.get(),response.get());
+    ServerStatus::getInstance().insertRequest(request_p->uri(), response.get()->statuscode());
     if (status != RequestHandler::Status::OK) {
       //Error
     }

@@ -17,13 +17,12 @@ void ServerStatus::insertHandler(const std::string& prefix,
       return;
     }
   }
-
   std::pair<std::string, std::string> handler(prefix, handler_name);
   handlers_.push_back(handler);
 }
 void ServerStatus::insertRequest(const std::string& uri, 
-        RequestHandler::Status status) {
-  std::pair<std::string, RequestHandler::Status> request(uri, status);
+        const std::string& status) {
+  std::pair<std::string, std::string> request(uri, status);
   requests_.push_back(request);
 }
 void ServerStatus::resetStatus() {

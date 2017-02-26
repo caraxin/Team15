@@ -15,7 +15,7 @@ namespace server {
     std::string content_length = std::to_string((int) body.size());
     response->SetStatus(Response::ResponseCodeNOT_FOUND);
     response->SetReasoning("NOT_FOUND");
-    response->AddHeader("Content-Type", "text/plain");
+    response->AddHeader("Content-Type", "text/html");
     response->AddHeader("Content-Length", content_length);
     response->SetBody(body);
     return RequestHandler::Status::OK;
@@ -25,7 +25,7 @@ namespace server {
     std::vector<std::pair<std::string, std::string>> handlers = ServerStatus::getInstance().getHandlers();
     std::vector<std::pair<std::string, RequestHandler::Status>> requests = ServerStatus::getInstance().getRequests();
 
-    std::string body = "<html>";
+    std::string body = "<!DOCTYPE <html>";
     body += "<head><title>Server Status</title></head>";
     body += "<h2>Handlers</h2>";
     body += "<table><tr><th>URL Prefix</th><th>Handler</th></tr>";

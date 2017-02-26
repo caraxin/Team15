@@ -6,8 +6,9 @@
 #include <iterator>
 #include <fstream>
 #include "EchoHandler.h"
+#include "StatusHandler.h"
 #include "StaticHandler.h"
-#include "Http404Handler.h"
+#include "NotFoundHandler.h"
 
 namespace Team15{
 namespace server{
@@ -22,10 +23,11 @@ namespace server{
   static const std::string BADMETHOD_CODE = "405";
   static const std::string BADMETHOD_REASON = "Method Not Allowed";
   
-  //Root URLS
+  //Root URIS
   static const std::string ECHO_HANDLER = "EchoHandler";
   static const std::string FILE_HANDLER = "StaticHandler";
-  static const std::string HTTP_404_HANDLER = "NotFoundHandler";
+  static const std::string STATUS_HANDLER = "StatusHandler";
+  static const std::string NOT_FOUND_HANDLER = "NotFoundHandler";
 
   RequestMgr::RequestMgr(const NginxConfig& config) {
 
@@ -65,12 +67,16 @@ namespace server{
       prefixMap.insert(std::make_pair(path, std::make_shared<EchoHandler>()));
       prefixMap[path]->Init("", config);
     }
+    if(handler == STATUS_HANDLER) {
+      prefixMap.insert(std::make_pair(path, std::make_shared<StatusHandler>()));
+      prefixMap[path]->Init("", config);
+    }
     else if (handler == FILE_HANDLER) {
       prefixMap.insert(std::make_pair(path, std::make_shared<StaticHandler>()));
       prefixMap[path]->Init("", config);
     }
-    else if (handler == HTTP_404_HANDLER) {
-      prefixMap.insert(std::make_pair(path, std::make_shared<Http404Handler>()));
+    else if (handler == NOT_FOUND_HANDLER) {
+      prefixMap.insert(std::make_pair(path, std::make_shared<NotFoundHandler>()));
       prefixMap[path]->Init("", config);
     }
     else {
@@ -89,8 +95,8 @@ namespace server{
     }
     */
   }
-  std::shared_ptr<RequestHandler> RequestMgr::getRequestHandler(const std::string& url) {
-    std::string current = url;
+  std::shared_ptr<RequestHandler> RequestMgr::getRequestHandler(const std::string& uri) {
+    std::string current = uri;
     while (current != "") {
       if (prefixMap.find(current) != prefixMap.end()) {
         return prefixMap.at(current);
@@ -100,6 +106,7 @@ namespace server{
         current = current.substr(0, pos);
       }
     }
+
     // no handler found, return default
     return prefixMap.at("default");
   }

@@ -1,11 +1,11 @@
-#ifndef HTTP404HANDLER_H
-#define HTTP404HANDLER_H
+#ifndef NOTFOUNDHANDLER_H
+#define NOTFOUNDHANDLER_H
 
 #include "RequestHandler.h"
 namespace Team15 {
 namespace server {
 
-class Http404Handler : public RequestHandler {
+class NotFoundHandler : public RequestHandler {
 
 	virtual RequestHandler::Status Init(const std::string& uri_prefix,
 				NginxConfig config);
@@ -14,9 +14,9 @@ class Http404Handler : public RequestHandler {
 
 };
 
-//REGISTER_REQUEST_HANDLER(HTTP404Handler);
+//REGISTER_REQUEST_HANDLER(NotFoundHandler);
 
 }
 }
 
-#endif // HTTP404HANDLER_H
+#endif // NOTFOUNDHANDLER_H

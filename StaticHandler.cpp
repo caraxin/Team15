@@ -1,5 +1,5 @@
 #include "StaticHandler.h"
-#include "Http404Handler.h"
+#include "NotFoundHandler.h"
 #include "mime_types.hpp"
 #include <iterator>
 #include <fstream>
@@ -51,15 +51,10 @@ namespace server {
       extension = path.substr(last_dot_pos + 1);
     }
 
-
-
     // open file
-    std::cout << path << std::endl;
+    //std::cout << path << std::endl;
 
     std::ifstream is(path.c_str(), std::ios::in | std::ios::binary);
-
-    std::cout << "First" << std::endl;
-    
 
     if (!is) {
       not_found_handler_->HandleRequest(request, response);
@@ -72,8 +67,6 @@ namespace server {
       body += c;
     }
     is.close();
-
-    std::cout << "Second" << std::endl;
 
     std::string content_length = std::to_string((int) body.size());
     response->SetStatus(Response::ResponseCodeOK);

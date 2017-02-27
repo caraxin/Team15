@@ -6,8 +6,11 @@
 #include <iterator>
 #include <fstream>
 #include "EchoHandler.h"
+#include "StatusHandler.h"
 #include "StaticHandler.h"
-#include "Http404Handler.h"
+#include "NotFoundHandler.h"
+#include "ServerStatus.h"
+#include "RequestHandler.h"
 
 namespace Team15{
 namespace server{
@@ -22,10 +25,11 @@ namespace server{
   static const std::string BADMETHOD_CODE = "405";
   static const std::string BADMETHOD_REASON = "Method Not Allowed";
   
-  //Root URLS
+  //Root URIS
   static const std::string ECHO_HANDLER = "EchoHandler";
-  static const std::string FILE_HANDLER = "StaticHandler";
-  static const std::string HTTP_404_HANDLER = "NotFoundHandler";
+  static const std::string STATIC_HANDLER = "StaticHandler";
+  static const std::string STATUS_HANDLER = "StatusHandler";
+  static const std::string NOT_FOUND_HANDLER = "NotFoundHandler";
 
   RequestMgr::RequestMgr(const NginxConfig& config) {
 
@@ -64,33 +68,26 @@ namespace server{
     if(handler == ECHO_HANDLER) {
       prefixMap.insert(std::make_pair(path, std::make_shared<EchoHandler>()));
       prefixMap[path]->Init("", config);
+      ServerStatus::getInstance().insertHandler(path, handler);
     }
-    else if (handler == FILE_HANDLER) {
+    if(handler == STATUS_HANDLER) {
+      prefixMap.insert(std::make_pair(path, std::make_shared<StatusHandler>()));
+      prefixMap[path]->Init("", config);
+      ServerStatus::getInstance().insertHandler(path, handler);
+    }
+    else if (handler == STATIC_HANDLER) {
       prefixMap.insert(std::make_pair(path, std::make_shared<StaticHandler>()));
       prefixMap[path]->Init("", config);
+      ServerStatus::getInstance().insertHandler(path, handler);
     }
-    else if (handler == HTTP_404_HANDLER) {
-      prefixMap.insert(std::make_pair(path, std::make_shared<Http404Handler>()));
+    else { // default is NotFoundHandler
+      prefixMap.insert(std::make_pair(path, std::make_shared<NotFoundHandler>()));
       prefixMap[path]->Init("", config);
+      ServerStatus::getInstance().insertHandler(path, NOT_FOUND_HANDLER);
     }
-    else {
-      // Error unknown handler specified
-    }
-    /*
-    switch(handler) {
-      case ECHO_HANDLER:
-        prefixMap.insert(std::make_pair(path, std::make_shared<EchoHandler>()));
-        break;
-      case FILE_HANDLER:
-        prefixMap.insert(std::make_pair(path, std::make_shared<StaticHandler>()));
-        break;
-      default:
-        // Error unknown handler specified
-    }
-    */
   }
-  std::shared_ptr<RequestHandler> RequestMgr::getRequestHandler(const std::string& url) {
-    std::string current = url;
+  std::shared_ptr<RequestHandler> RequestMgr::getRequestHandler(const std::string& uri) {
+    std::string current = uri;
     while (current != "") {
       if (prefixMap.find(current) != prefixMap.end()) {
         return prefixMap.at(current);
@@ -100,14 +97,19 @@ namespace server{
         current = current.substr(0, pos);
       }
     }
-    // no handler found, return default
-    return prefixMap.at("default");
+
+    if (uri.length() >= 2 && uri[0] == '/' && uri[1] == '/') { 
+      // default
+      return prefixMap.at("default");
+    }
+    return prefixMap.at("/");
   }
   std::unique_ptr<Response> RequestMgr::HandleRequest(const std::string& raw_request) {
     std::unique_ptr<Request> request_p = Request::Parse(raw_request);
     auto handler = getRequestHandler(request_p->uri());
     auto response = std::unique_ptr<Response>(new Response());
     RequestHandler::Status status = handler->HandleRequest(*request_p.get(),response.get());
+    ServerStatus::getInstance().insertRequest(request_p->uri(), response.get()->statuscode());
     if (status != RequestHandler::Status::OK) {
       //Error
     }

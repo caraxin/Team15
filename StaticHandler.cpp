@@ -1,9 +1,11 @@
 #include "StaticHandler.h"
-#include "Http404Handler.h"
+#include "NotFoundHandler.h"
 #include "mime_types.hpp"
 #include <iterator>
 #include <fstream>
 #include <string>
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
 namespace Team15 {
 namespace server {
 
@@ -27,10 +29,10 @@ namespace server {
     return RequestHandler::Status::OK;
 }
   RequestHandler::Status StaticHandler::HandleRequest(const Request& request, 
-        Response* response) {
+        Response* response) {   
     std::string path = rootPath_.string();
 
-    // start from current directory
+    // relative path
     if (path[0] == '/') {
       path = '.' + path;
     }
@@ -51,19 +53,22 @@ namespace server {
       extension = path.substr(last_dot_pos + 1);
     }
 
-
-
-    // open file
-    std::cout << path << std::endl;
+    boost::filesystem::path boost_path(path);
+    if (!boost::filesystem::exists(path) 
+            || !boost::filesystem::is_regular_file(path)) {
+      NotFoundHandler not_found_handler;
+      not_found_handler.HandleRequest(request, response);
+      
+      return RequestHandler::Status::OK;
+    }
 
     std::ifstream is(path.c_str(), std::ios::in | std::ios::binary);
 
-    std::cout << "First" << std::endl;
-    
-
     if (!is) {
-      not_found_handler_->HandleRequest(request, response);
-      return NOT_FOUND;
+      NotFoundHandler not_found_handler;
+      not_found_handler.HandleRequest(request, response);
+      
+      return RequestHandler::Status::OK;
     }
 
     char c;
@@ -71,9 +76,7 @@ namespace server {
     while (is.get(c)) {
       body += c;
     }
-    is.close();
-
-    std::cout << "Second" << std::endl;
+    is.close();  
 
     std::string content_length = std::to_string((int) body.size());
     response->SetStatus(Response::ResponseCodeOK);
@@ -82,7 +85,7 @@ namespace server {
     response->AddHeader("Content-Length", content_length);
     response->SetBody(body);
   
-  return RequestHandler::Status::OK;
+    return RequestHandler::Status::OK;   
 }
 
 }

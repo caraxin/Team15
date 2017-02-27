@@ -15,7 +15,6 @@ class StaticHandler : public RequestHandler {
  private:
   boost::filesystem::path uri_prefix_;
   boost::filesystem::path rootPath_;
-  RequestHandler* not_found_handler_;
 };
 
 //REGISTER_REQUEST_HANDLER(StaticHandler);

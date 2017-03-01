@@ -27,7 +27,7 @@ class connection
  private:
   void start_reading();
   void read_handler(const boost::system::error_code& ec,std::size_t bytes_transferred);
-  void start_writing();
+  void start_writing(std::size_t bytes_transferred);
   void write_handler(const boost::system::error_code& ec,std::size_t bytes_transferred);
   boost::asio::ip::tcp::socket socket_;
   std::array<char,max_length> buffer_;  

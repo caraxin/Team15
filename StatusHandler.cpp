@@ -6,7 +6,7 @@ namespace Team15 {
 namespace server {
 
   RequestHandler::Status StatusHandler::Init(const std::string& uri_prefix,
-		    NginxConfig config) {
+        NginxConfig config) {
     return RequestHandler::Status::OK;
   }
   RequestHandler::Status StatusHandler::HandleRequest(const Request& request, 
@@ -14,7 +14,7 @@ namespace server {
     std::string body = StatusHandler::createBody();
     std::string content_length = std::to_string((int) body.size());
     response->SetStatus(Response::ResponseCodeOK);
-    response->SetReasoning("NOT_FOUND");
+    response->SetReasoning("OK");
     response->AddHeader("Content-Type", "text/html");
     response->AddHeader("Content-Length", content_length);
     response->SetBody(body);
@@ -25,7 +25,7 @@ namespace server {
     std::vector<std::pair<std::string, std::string>> handlers = ServerStatus::getInstance().getHandlers();
     std::vector<std::pair<std::string, std::string>> requests = ServerStatus::getInstance().getRequests();
 
-    std::string body = "<!DOCTYPE <html>";
+    std::string body = "<html>";
     body += "<head><title>Server Status</title></head>";
     body += "<h2>Handlers</h2>";
     body += "<table><tr><th>URI Prefix</th><th>Request Handler</th></tr>";

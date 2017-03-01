@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Build the binary
-#make clean
-#make
+make clean
+make
 
 # Start the server
 echo "
@@ -76,7 +76,7 @@ fi
 # Shutdown the webserver and cleanup
 echo "Cleaning up and shutting down"
 pkill webserver
-#make clean
+make clean
 rm -f test_response
 rm -f test_proxy_response
 

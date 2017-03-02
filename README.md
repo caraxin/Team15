@@ -3,6 +3,12 @@
 Winter CS130 Team15 Repository. Working on HTTP server with different functionality configurable using nginx standards and conforming to the following common api:
 https://github.com/UCLA-CS130/webserver-api
 
+## New Updated for Assignment 7
+When you start the server as followed, type the url: localhost:2020/ in the browser.
+Then you will get the homepage of ucla.
+Our team(TSC) set the ProxyHandler root as '/' in the test_config to make sure all of the src/href files will be fetched successfully.
+The server for our proxy is ucla.edu, which have some 302 codes sent back. And our server handles 302 codes successfully.
+
 ## Getting Started
 
 These instructions will show you what to do to run our project and test everything

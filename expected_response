@@ -1,8 +1,5 @@
-HTTP/1.0 200 OK
-Content-Type: text/plain
+HTTP/1.0 404 NOT_FOUND
+Content-Length: 63
+Content-Type: text/html
 
-GET / HTTP/1.1
-User-Agent: curl/7.35.0
-Host: localhost:4000
-Accept: */*
-
+<!DOCTYPE html><html><body><h1>404 Not Found</h1></body></html>

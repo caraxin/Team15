@@ -46,34 +46,38 @@ inline std::unique_ptr<Request> Request::Parse(const std::string& raw_request ) 
   std::unique_ptr<Request> request = std::unique_ptr<Request>(new Request());
   std::string DCRLF = "\r\n\r\n";
   std::string headerString = raw_request.substr(0,raw_request.find(DCRLF));
-  std::string body = raw_request.substr(raw_request.find(DCRLF));
+  // if have a body
+  if (raw_request.size() != raw_request.find(DCRLF) + 4) {
+    request->SetBody(
+      raw_request.substr(raw_request.find(DCRLF) + 4));
+  }
+
   tokenizer allLines{headerString,CRLF};
   for (tokenizer::iterator it = allLines.begin(); it != allLines.end(); ++it) {
     if (it == allLines.begin()) {
       tokenizer tokens{*it,space};
-  	  tokenizer::iterator it1= tokens.begin();
-  	  request->SetMethod(*it1);
-  	  std::advance(it1,1);
-  	  request->Seturi(*it1);
-  	  std::advance(it1,1);
-  	  request->SetVersion(*it1);
+      tokenizer::iterator it1= tokens.begin();
+      request->SetMethod(*it1);
+      std::advance(it1,1);
+      request->Seturi(*it1);
+      std::advance(it1,1);
+      request->SetVersion(*it1);
     }
     else {
       std::string::size_type pos = (*it).find(" ");
       if (pos > 0) {
-      	std::string first = (*it).substr(0,pos);
-      	first.erase(std::remove(first.begin(),first.end(),':'),first.end());
-      	for (auto i = HttpHeaderFieldsMap().begin(); i != HttpHeaderFieldsMap().end(); ++i) {
-      	  if (first.compare(i->second)==0) {
-      	    std::string rest = (*it).substr(pos+1);
-      	    request->SetHeaderField(i->first,rest);
-      	    break;
-	        }
-	      }
+        std::string first = (*it).substr(0,pos);
+        first.erase(std::remove(first.begin(),first.end(),':'),first.end());
+        for (auto i = HttpHeaderFieldsMap().begin(); i != HttpHeaderFieldsMap().end(); ++i) {
+          if (first.compare(i->second)==0) {
+            std::string rest = (*it).substr(pos+1);
+            request->SetHeaderField(i->first,rest);
+            break;
+          }
+        }
       }
     }
   }
-  request->SetBody(body);
   return request;
     
 }

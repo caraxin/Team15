@@ -28,7 +28,12 @@ const std::string HttpVersionToken = "HTTP/1.0";
  void AddHeader(const std::string& header_name, const std::string& header_value) {
    headerFields_[header_name] = header_value;
  }
-  void SetConnection(HttpConnectionField conn) { SetHeaderField(CONNECTION,(conn==KEEP_ALIVE?std::string("keep-alive"):std::string("close"))); }
+
+ void SetConnection(HttpConnectionField conn) { SetHeaderField(CONNECTION,(conn==KEEP_ALIVE?std::string("keep-alive"):std::string("close"))); }
+
+ std::map<std::string, std::string> GetHeaders() const{
+ 	return headerFields_;
+ }
 
 
 
@@ -43,15 +48,5 @@ const std::string HttpVersionToken = "HTTP/1.0";
   std::string httpVersion_;
   std::map<std::string,std::string> headerFields_;
 };
-
-
-
-
-
-
-
-
-
-
 
 #endif

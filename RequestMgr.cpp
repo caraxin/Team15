@@ -12,6 +12,7 @@
 #include "ServerStatus.h"
 #include "RequestHandler.h"
 #include "ProxyHandler.h"
+#include "TestHandler.h"
 
 namespace Team15{
 namespace server{
@@ -90,6 +91,16 @@ RequestMgr::registerPrefix(const std::string& path,
   else if (handler == PROXY_HANDLER) {
     prefixMap.insert(std::make_pair(path, std::make_shared<ProxyHandler>()));
     prefixMap[path]->Init(path, config);
+    ServerStatus::getInstance().insertHandler(path, handler);
+  }
+  else if (handler == "TestHandler1") {
+    prefixMap.insert(std::make_pair(path, std::make_shared<TestHandler1>()));
+    prefixMap[path]->Init("", config);
+    ServerStatus::getInstance().insertHandler(path, handler);
+  }
+  else if (handler == "TestHandler2") {
+    prefixMap.insert(std::make_pair(path, std::make_shared<TestHandler2>()));
+    prefixMap[path]->Init("", config);
     ServerStatus::getInstance().insertHandler(path, handler);
   }
   else { // default is NotFoundHandler

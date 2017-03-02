@@ -100,7 +100,7 @@ ProxyHandler::IOHandle(const std::string host,
     // error handler
     return RequestHandler::OK;
   }
-  raw_headers += http_version + " " + std::to_string(status_code) + status_message + "\r\n";
+  raw_headers += http_version + " " + std::to_string(status_code) + status_message + "\n";
 
   // Read the response headers, which are terminated by a blank line.
   boost::asio::read_until(socket_, response_stream_buf, "\r\n\r\n", ec);
@@ -180,7 +180,7 @@ ProxyHandler::CreateProxyRequest(const Request& request)
   std::map<std::string, std::string> headers = request.GetHeaders();
   for (auto header: headers) {
     if (header.first == "Host") {
-      request_->AddHeader("Host", server_host);
+      request_->AddHeader("Host", server_host + ":" + server_port);
       break;
     }
   }
@@ -234,10 +234,11 @@ ProxyHandler::HandleRedirect(const std::string& location_header,
     for (auto header: headers) {
       if (header.first == "Host") {
         // because headers is a map, so AddHeader is like SetHeader
-        request->AddHeader("Host", host);
+        request->AddHeader("Host", host + ":" + port);
         break;
       }
     }
+    //std::cout << "host=" << host << " port=" << port << " path=" << path << std::endl;
     return IOHandle(host, port, request, response);
   } // relative url
   else {

@@ -50,9 +50,12 @@ EXIT_STATUS=$?
 
 #Do the proxy test
 curl -i -s localhost:8080/2020/echo > test_proxy_response
+curl -i -s localhost:2020/echo > expected_proxy_response
 DIFF_PROXY=$(diff expected_proxy_response test_proxy_response)
 EXIT_STATUS_PROXY=$?
 
+echo "Integration Test!"
+echo "---------------------------------------------------------------------|"
 # Error handling
 if [ "$EXIT_STATUS" -eq 0 ]
 then
@@ -72,12 +75,13 @@ else
     echo "diff: "
     echo $DIFF_PROXY
 fi
+echo "---------------------------------------------------------------------|"
 
 # Shutdown the webserver and cleanup
 echo "Cleaning up and shutting down"
 pkill webserver
 make clean
 rm -f test_response
-rm -f test_proxy_response
+#rm -f test_proxy_response
 
 exit "$EXIT_STATUS"

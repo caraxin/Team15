@@ -12,6 +12,7 @@ namespace server {
   RequestHandler::Status StaticHandler::Init(const std::string& uri_prefix,
 		    NginxConfig config) {
 
+    uri_prefix_ = uri_prefix;
     std::string root = "";
     for (auto statement : config.statements_) {
       if (statement->tokens_[0] == "root") {
@@ -30,15 +31,10 @@ namespace server {
 }
   RequestHandler::Status StaticHandler::HandleRequest(const Request& request, 
         Response* response) {   
-    std::string path = rootPath_.string();
-
-    // relative path
-    if (path[0] == '/') {
-      path = '.' + path;
-    }
+    std::string path = '.' + rootPath_.string();
 
     // Connect file with root path
-    path = path + request.uri();
+    path = path + "/" + request.uri().substr(uri_prefix_.size());
 
     // default file
     if (path[path.size() - 1] == '/') {

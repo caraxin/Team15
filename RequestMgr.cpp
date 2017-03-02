@@ -84,7 +84,7 @@ RequestMgr::registerPrefix(const std::string& path,
   }
   else if (handler == STATIC_HANDLER) {
     prefixMap.insert(std::make_pair(path, std::make_shared<StaticHandler>()));
-    prefixMap[path]->Init("", config);
+    prefixMap[path]->Init(path, config);
     ServerStatus::getInstance().insertHandler(path, handler);
   }
   else if (handler == PROXY_HANDLER) {
@@ -113,11 +113,7 @@ RequestMgr::getRequestHandler(const std::string& uri)
     }
   }
 
-  if (uri.length() >= 2 && uri[0] == '/' && uri[1] == '/') { 
-    // default
-    return prefixMap.at("default");
-  }
-  return prefixMap.at("/");
+  return prefixMap.at("default");
 }
 
 std::unique_ptr<Response> 

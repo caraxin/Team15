@@ -13,7 +13,7 @@ class StaticHandler : public RequestHandler {
   virtual RequestHandler::Status HandleRequest(const Request& request, 
         Response* response);
  private:
-  boost::filesystem::path uri_prefix_;
+  std::string uri_prefix_;
   boost::filesystem::path rootPath_;
 };
 

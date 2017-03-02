@@ -15,7 +15,27 @@ class ProxyHandler : public RequestHandler {
                               NginxConfig config);
 
   RequestHandler::Status HandleRequest(const Request& request, 
-                                               Response* response);
+                                       Response* response);
+
+  void HandleContent(const std::string& body);
+  
+  RequestHandler::Status IOHandle(const std::string host,
+                                  const std::string port,
+                                  Request* request,
+                                  Response* response);
+
+  std::unique_ptr<Request> CreateProxyRequest(const Request& request);
+
+  RequestHandler::Status HandleError(const std::string& error_info, 
+                                     const boost::system::error_code& ec);
+
+  RequestHandler::Status HandleRedirect(const std::string& location_header,
+                                        Request* request,
+                                        Response *response);
+
+  void ParsePathAndQuery(const std::string& relative_url,
+                         std::string& path,
+                         std::string& query);
 
  private:
   boost::asio::io_service io_service_;
@@ -28,23 +48,6 @@ class ProxyHandler : public RequestHandler {
 
   const std::size_t max_length = 8192; 
 
-  RequestHandler::Status IOHandle(const std::string host,
-                                  const std::string port,
-                                  Request& request,
-                                  Response* response);
-
-  std::unique_ptr<Request> CreateProxyRequest(const Request& request);
-
-  RequestHandler::Status HandleError(const std::string& error_info, 
-                                     const boost::system::error_code& ec);
-
-  RequestHandler::Status HandleRedirect(const std::string& location_header,
-                                        Request& request,
-                                        Response *response);
-
-  void ParsePathAndQuery(const std::string& relative_url,
-                         std::string& path,
-                         std::string& query);
 };
 
 

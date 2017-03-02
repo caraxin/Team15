@@ -112,7 +112,7 @@ RequestMgr::getRequestHandler(const std::string& uri)
       current = current.substr(0, pos);
     }
   }
-
+  if (prefixMap.find("/") != prefixMap.end()) return prefixMap.at("/");
   return prefixMap.at("default");
 }
 

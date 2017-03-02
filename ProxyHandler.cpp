@@ -45,20 +45,19 @@ RequestHandler::Status
 ProxyHandler::HandleRequest(const Request& request,
                             Response* response)
 {
-  BOOST_LOG_TRIVIAL(trace) << "Entering ProxyHandler";
   // construct the request 
   std::unique_ptr<Request> request_ = CreateProxyRequest(request);
-  return IOHandle(server_host, server_port, *request_, response);
+  return IOHandle(server_host, server_port, request_.get(), response);
 }
 
 RequestHandler::Status
 ProxyHandler::IOHandle(const std::string host,
                        const std::string port,
-                       Request& request,
+                       Request* request,
                        Response* response)
 {
-  std::string raw_request = request.ToString();
-  BOOST_LOG_TRIVIAL(trace) << "proxy request: " << raw_request;
+  std::string raw_request = request->ToString();
+  BOOST_LOG_TRIVIAL(trace) << raw_request;
 
   // resolve the server endpoint
   boost::system::error_code ec;
@@ -80,7 +79,7 @@ ProxyHandler::IOHandle(const std::string host,
 
   // Read the response status line. The response streambuf will automatically
   // grow to accommodate the entire line. The growth may be limited by passing
-  // a maximum size to the streambuf constructor.
+  // a maximum size to the streambuf cFonstructor.
   boost::asio::streambuf response_stream_buf;
 
   boost::asio::read_until(socket_, response_stream_buf, "\r\n", ec);
@@ -110,9 +109,13 @@ ProxyHandler::IOHandle(const std::string host,
   // Process the 302 code
   std::string header;
   if (status_code == 302) {
+    BOOST_LOG_TRIVIAL(trace) << "302 found!";
     while (std::getline(response_stream, header) && header != "\r") {
-      if (header.find("Location") != std::string::npos)
+      if (header.find("Location") != std::string::npos) {
+        // delete '/r'
+        header.pop_back();
         return HandleRedirect(header, request, response);
+      }
     }
     BOOST_LOG_TRIVIAL(error) << "Invalid response\n";
     // error handler
@@ -120,7 +123,7 @@ ProxyHandler::IOHandle(const std::string host,
   }
 
   // process the headers
-  std::string content_length_str;
+  std::string content_length_str = "";
   while (std::getline(response_stream, header) && header != "\r") {
     if (header.find("Content-Length") != std::string::npos) {
       for (auto c: header) {
@@ -131,6 +134,12 @@ ProxyHandler::IOHandle(const std::string host,
   }
   raw_headers += "\r\n";
   response->SetRawHeader(raw_headers);
+  if (content_length_str == "") {
+    BOOST_LOG_TRIVIAL(error) << "Invalid 200 responses -- without Content-Length Header!";
+    // error handler
+    return RequestHandler::OK;
+  }
+  BOOST_LOG_TRIVIAL(trace) << raw_headers;
 
   // some contents may have been received by read_until
   // according the read_until doc, it may read pass the delimeter
@@ -144,31 +153,37 @@ ProxyHandler::IOHandle(const std::string host,
   std::ostringstream ss;
   ss << &response_stream_buf;
   body = ss.str();
+  //HandleContent(body);
   response->SetBody(body);
-
   return RequestHandler::OK;
+}
+
+void
+ProxyHandler::HandleContent(const std::string& body)
+{/*
+  // regex = (?:href|src)=(["'])(?!mailto|https).*?\1
+  boost::cmatch ref_mat;
+  boost::regex ref_expression ("(href|src)=\"(/.*)\"");
+  if (!boost::regex_match(raw_request.c_str(), request_mat, request_expression)) {
+    BOOST_LOG_TRIVIAL(info) << "Invalid request format\n";
+    return nullptr;
+  }*/
 }
 
 std::unique_ptr<Request>
 ProxyHandler::CreateProxyRequest(const Request& request)
 {
-  std::unique_ptr<Request> request_ = std::unique_ptr<Request>(new Request());
+  std::unique_ptr<Request> request_ = std::unique_ptr<Request>(new Request(request));
   std::string new_uri = request.uri().substr(uri_prefix_.size());
-  if (new_uri == "") new_uri = "/";
-
+  if (new_uri == "" || new_uri[0] != '/') new_uri = "/" + new_uri;
   request_->Seturi(new_uri);
-  request_->SetMethod("GET");
-  request_->SetVersion(request.version());
-
-  // copy and modify some headers
   std::map<std::string, std::string> headers = request.GetHeaders();
   for (auto header: headers) {
     if (header.first == "Host") {
       request_->AddHeader("Host", server_host);
+      break;
     }
-    else request_->AddHeader(header.first, header.second);
   }
-  request_->SetBody(request.body());
   return request_;
 }
 
@@ -181,7 +196,7 @@ ProxyHandler::HandleError(const std::string& error_info, const boost::system::er
 
 RequestHandler::Status
 ProxyHandler::HandleRedirect(const std::string& location_header,
-                             Request& request,
+                             Request* request,
                              Response *response)
 {
   std::string location;
@@ -212,14 +227,14 @@ ProxyHandler::HandleRedirect(const std::string& location_header,
       std::string relative_url = location_header.substr(path_start);
       ParsePathAndQuery(relative_url, path, query);
     }
-    request.Seturi(path);
-    request.SetBody(query);
+    request->Seturi(path);
+    request->SetBody(query);
     // modify Host header
-    std::map<std::string, std::string> headers = request.GetHeaders();
+    std::map<std::string, std::string> headers = request->GetHeaders();
     for (auto header: headers) {
       if (header.first == "Host") {
         // because headers is a map, so AddHeader is like SetHeader
-        request.AddHeader("Host", host);
+        request->AddHeader("Host", host);
         break;
       }
     }
@@ -227,7 +242,8 @@ ProxyHandler::HandleRedirect(const std::string& location_header,
   } // relative url
   else {
     // TODO: maybe multiple spaces after url??
-    std::string path, query;
+    std::string path;
+    std::string query;
     std::size_t path_start = location_header.find_last_of(" ");
     if (path_start == std::string::npos || 
         path_start == location_header.size() - 1) {
@@ -240,8 +256,8 @@ ProxyHandler::HandleRedirect(const std::string& location_header,
       else relative_url = location_header.substr(path_start + 1);
       ParsePathAndQuery(relative_url, path, query);
     }
-    request.Seturi(path);
-    request.SetBody(query);
+    request->Seturi(path);
+    request->SetBody(query);
     return IOHandle(server_host, server_port, request, response);
   }
   return RequestHandler::OK;
@@ -254,13 +270,12 @@ ProxyHandler::ParsePathAndQuery(const std::string& relative_url,
 {
   std::size_t query_pos = relative_url.find("?");
   if (query_pos != std::string::npos) {
-    path = relative_url.substr(0, query_pos);
-    query = relative_url.substr(query_pos + 1);
+    path.append(relative_url.substr(0, query_pos));
+    query.append(relative_url.substr(query_pos + 1));
   }
-  else path = relative_url;
+  else path.append(relative_url);
 }
 
 
 } // server
 } // Team15
-
